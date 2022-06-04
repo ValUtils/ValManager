@@ -1,11 +1,11 @@
+from storage import *
+from parsing import *
 from pick import pick as pickFunc
 from getpass import getpass
 from sys import argv
 from riot import getHeaders
 import requests
 import json
-from storage import *
-from parsing import *
 
 def pick(options):
     return pickFunc(options)[0]
