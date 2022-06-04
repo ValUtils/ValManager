@@ -14,7 +14,7 @@ def saveToDrive(data, file):
 	f.close()
 
 def readFromDrive(file):
-	f = open(settingsPath + file, "r")
+	f = open(getFilePath(file), "r")
 	data = f.read()
 	f.close()
 	return data
