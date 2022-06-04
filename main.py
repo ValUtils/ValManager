@@ -10,13 +10,6 @@ import base64
 def pick(options):
     return pickFunc(options)[0]
 
-def jsonRead(file):
-    f = open(file, "r")
-    rawData = f.read()
-    data = json.loads(rawData)
-    f.close()
-    return data
-
 def decode( b64string ):
     decoded_data = base64.b64decode( b64string )
     return zlib.decompress( decoded_data , -15)
@@ -51,13 +44,8 @@ def setPreference(data):
     req = requests.put(apiURL, headers=headers, json=rawData)
     return req
 
-def dumpToFile(cfg):
-    f = open(cfg, "w")
-    f.write(json.dumps(getPreference(),indent=4))
-    f.close()
-
 def importFromFile(cfg):
-    data = jsonRead(cfg)
+    data = configRead(cfg)
     req = setPreference(data)
     print(f'Status code: {req.status_code}')
 
@@ -83,9 +71,9 @@ def main():
     headers = getHeaders(user, passwd)
 
     if (action == "dump"):
-        dumpToFile(cfg)
+        configWrite(getPreference(), cfg)
     elif (action == "import"):
-        dumpToFile(f'{user}.bck.json')
+        configWrite(getPreference(), f'{user}.bck.json')
         importFromFile(cfg)
     elif (action == "restore"):
         importFromFile(f'{user}.bck.json')
