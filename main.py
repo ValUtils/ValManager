@@ -72,7 +72,7 @@ def getPass(user):
     return ""
 
 def main():
-    action, cfg, user = menu()
+    action, user, cfg = menu()
     passwd = getPass(user)
     
     if (user == "None" or passwd == ""):
@@ -91,16 +91,22 @@ def main():
         importFromFile(f'{user}.bck.json')
 
 def menu():
-    if (len(argv) > 2):
-        return [argv[1],argv[2],argv[3]]
+    if (len(argv) == 1):
+        return getOptions()
+    if (len(argv) == 4):
+        s, action, user, cfg = argv
+        return [action, user, cfg]
+
+
+def getOptions():
     action = pick(["dump", "import", "restore"])
     users = getUsers()
     users.append("None")
     user = pick(users)
-    if (len(argv) > 1):
-        return [action, argv[1], user]
+    if (action == "restore"):
+        return [action, user, ""]
     cfg = input("Config file: ")
-    return [action, cfg, user]
+    return [action, user, cfg]
 
 if __name__ == "__main__":
     main()
