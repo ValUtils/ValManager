@@ -9,11 +9,11 @@ client_platform = 'ew0KCSJwbGF0Zm9ybVR5cGUiOiAiUEMiLA0KCSJwbGF0Zm9ybU9TIjogIldpb
 
 def authenticate(username, password):
     class SSLAdapter(HTTPAdapter):
-        def init_poolmanager(self, connections, maxsize, block=False):
-            self.poolmanager = PoolManager(num_pools=connections,
-                                        maxsize=maxsize,
-                                        block=block,
-                                        ssl_version=ssl.PROTOCOL_TLSv1_2)
+        def init_poolmanager(self, *args: Any, **kwargs: Any) -> None:
+            ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+            ctx.set_ciphers("DEFAULT@SECLEVEL=1")
+            kwargs['ssl_context'] = ctx
+            return super(SSLAdapter, self).init_poolmanager(*args, **kwargs)
 
     headers = OrderedDict({
         'User-Agent': 'RiotClient/48.0.0.4342439.4342439 rso-auth (Windows;10;;Professional, x64)'
