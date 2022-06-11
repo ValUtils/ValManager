@@ -6,6 +6,7 @@ from collections import OrderedDict
 from requests.adapters import HTTPAdapter
 
 client_platform = 'ew0KCSJwbGF0Zm9ybVR5cGUiOiAiUEMiLA0KCSJwbGF0Zm9ybU9TIjogIldpbmRvd3MiLA0KCSJwbGF0Zm9ybU9TVmVyc2lvbiI6ICIxMC4wLjE5MDQyLjEuMjU2LjY0Yml0IiwNCgkicGxhdGZvcm1DaGlwc2V0IjogIlVua25vd24iDQp9'
+userAgent = "RiotClient/51.0.0.4429735.4429735 rso-auth (Windows;10;;Professional, x64)"
 
 def authenticate(username, password):
     class SSLAdapter(HTTPAdapter):
@@ -16,7 +17,7 @@ def authenticate(username, password):
             return super(SSLAdapter, self).init_poolmanager(*args, **kwargs)
 
     headers = OrderedDict({
-        'User-Agent': 'RiotClient/48.0.0.4342439.4342439 rso-auth (Windows;10;;Professional, x64)'
+        'User-Agent': userAgent
     })
 
     session = requests.session()
@@ -44,7 +45,7 @@ def authenticate(username, password):
     headers = {
         'Accept-Encoding': 'gzip, deflate, br',
         'Host': "entitlements.auth.riotgames.com",
-        'User-Agent': 'RiotClient/43.0.1.4195386.4190634 rso-auth (Windows;10;;Professional, x64)',
+        'User-Agent': userAgent,
         'Authorization': f'Bearer {access_token}',
     }
     r = session.post('https://entitlements.auth.riotgames.com/api/token/v1', headers=headers, json={})
@@ -53,7 +54,7 @@ def authenticate(username, password):
     headers = {
         'Accept-Encoding': 'gzip, deflate, br',
         'Host': "auth.riotgames.com",
-        'User-Agent': 'RiotClient/43.0.1.4195386.4190634 rso-auth (Windows;10;;Professional, x64)',
+        'User-Agent': userAgent,
         'Authorization': f'Bearer {access_token}'
     }
 
