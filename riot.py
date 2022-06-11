@@ -1,10 +1,9 @@
+import re
 import ssl
 import requests
-from collections import OrderedDict
-import re
-import socket
-from requests.adapters import HTTPAdapter
 from urllib3 import PoolManager
+from collections import OrderedDict
+from requests.adapters import HTTPAdapter
 
 client_platform = 'ew0KCSJwbGF0Zm9ybVR5cGUiOiAiUEMiLA0KCSJwbGF0Zm9ybU9TIjogIldpbmRvd3MiLA0KCSJwbGF0Zm9ybU9TVmVyc2lvbiI6ICIxMC4wLjE5MDQyLjEuMjU2LjY0Yml0IiwNCgkicGxhdGZvcm1DaGlwc2V0IjogIlVua25vd24iDQp9'
 
