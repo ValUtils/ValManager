@@ -1,11 +1,18 @@
 import re
 import ssl
 import requests
-from urllib3 import PoolManager
+from typing import Any
+from parsing import encodeJSON
 from collections import OrderedDict
 from requests.adapters import HTTPAdapter
 
-client_platform = 'ew0KCSJwbGF0Zm9ybVR5cGUiOiAiUEMiLA0KCSJwbGF0Zm9ybU9TIjogIldpbmRvd3MiLA0KCSJwbGF0Zm9ybU9TVmVyc2lvbiI6ICIxMC4wLjE5MDQyLjEuMjU2LjY0Yml0IiwNCgkicGxhdGZvcm1DaGlwc2V0IjogIlVua25vd24iDQp9'
+platform = {
+	"platformType": "PC",
+	"platformOS": "Windows",
+	"platformOSVersion": "10.0.19042.1.256.64bit",
+	"platformChipset": "Unknown"
+}
+
 userAgent = "RiotClient/51.0.0.4429735.4429735 rso-auth (Windows;10;;Professional, x64)"
 
 def authenticate(username, password):
@@ -16,13 +23,12 @@ def authenticate(username, password):
             kwargs['ssl_context'] = ctx
             return super(SSLAdapter, self).init_poolmanager(*args, **kwargs)
 
-    headers = OrderedDict({
-        'User-Agent': userAgent
-    })
-
     session = requests.session()
-    session.mount('https://auth.riotgames.com/api/v1/authorization', SSLAdapter())
-    session.headers = headers
+    session.headers = OrderedDict({
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept": "application/json, text/plain, */*"
+    })
+    session.mount('https://', SSLAdapter())
 
     data = {
         'client_id': 'play-valorant-web-prod',
@@ -30,6 +36,11 @@ def authenticate(username, password):
         'redirect_uri': 'https://playvalorant.com/opt_in',
         'response_type': 'token id_token',
     }
+
+    headers = {
+        'User-Agent': userAgent
+    }
+
     r = session.post(f'https://auth.riotgames.com/api/v1/authorization', json=data, headers=headers)
 
     data = {
@@ -37,6 +48,7 @@ def authenticate(username, password):
         'username': username,
         'password': password
     }
+
     r = session.put(f'https://auth.riotgames.com/api/v1/authorization', json=data, headers=headers)
     pattern = re.compile('access_token=((?:[a-zA-Z]|\d|\.|-|_)*).*id_token=((?:[a-zA-Z]|\d|\.|-|_)*).*expires_in=(\d*)')
     data = pattern.findall(r.json()['response']['parameters']['uri'])[0]
@@ -48,15 +60,11 @@ def authenticate(username, password):
         'User-Agent': userAgent,
         'Authorization': f'Bearer {access_token}',
     }
+
     r = session.post('https://entitlements.auth.riotgames.com/api/token/v1', headers=headers, json={})
     entitlements_token = r.json()['entitlements_token']
 
-    headers = {
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Host': "auth.riotgames.com",
-        'User-Agent': userAgent,
-        'Authorization': f'Bearer {access_token}'
-    }
+    headers["Host"] = "auth.riotgames.com"
 
     r = session.post('https://auth.riotgames.com/userinfo', headers=headers, json={})
     user_id = r.json()['sub']
@@ -72,6 +80,6 @@ def getVersion():
 
 def getHeaders(username, password):
     headers = authenticate(username, password)
-    headers['X-Riot-ClientPlatform'] = client_platform
+    headers['X-Riot-ClientPlatform'] = encodeJSON(platform)
     headers['X-Riot-ClientVersion'] = getVersion()
     return headers

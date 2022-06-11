@@ -18,3 +18,11 @@ def toData( b64string ):
 def toMagic( data ):
     stringify = json.dumps(data).encode("utf-8")
     return encode(stringify).decode("utf-8")
+
+def encodeJSON( data ):
+    str = json.dumps(data).encode("utf-8")
+    return base64.b64encode(str).decode("utf-8")
+
+def decodeJSON( data ):
+    str = base64.b64decode(data.encode("utf-8"))
+    return json.loads(str)
