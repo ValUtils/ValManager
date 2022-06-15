@@ -39,15 +39,11 @@ def getPass(user):
     users = jsonRead("users.json")
     if user in users:
         return users[user]
-    return ""
+    return getpass("Password: ")
 
 def main():
     action, user, cfg = menu()
     passwd = getPass(user)
-    
-    if (user == "None" or passwd == ""):
-        user = input("User: ")
-        passwd = getpass("Password: ")
 
     global headers
     headers = getHeaders(user, passwd)
@@ -69,8 +65,11 @@ def menu():
 
 def getUser():
     users = getUsers()
-    users.append("None")
-    return pick(users)
+    users.append("New...")
+    choice = pick(users)
+    if (choice == "New..."):
+        return input("User: ")
+    return choice
 
 def getCFG(new):
     configs = configList()
