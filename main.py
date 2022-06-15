@@ -67,15 +67,26 @@ def menu():
         s, action, user, cfg = argv
         return [action, user, cfg]
 
+def getUser():
+    users = getUsers()
+    users.append("None")
+    return pick(users)
+
+def getCFG(new):
+    configs = configList()
+    if (new):
+        configs.append("New...")
+    choice = pick(configs)
+    if (choice == "New..."):
+        return input("Config file: ")
+    return choice
 
 def getOptions():
     action = pick(["dump", "import", "restore"])
-    users = getUsers()
-    users.append("None")
-    user = pick(users)
+    user = getUser()
     if (action == "restore"):
         return [action, user, ""]
-    cfg = input("Config file: ")
+    cfg = getCFG(action == "dump")
     return [action, user, cfg]
 
 if __name__ == "__main__":

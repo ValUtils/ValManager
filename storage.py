@@ -34,6 +34,16 @@ def configWrite(data,file):
 def configRead(file):
 	return jsonRead(getUsersPath(file))
 
+def configList():
+	usersPath = getFilePath("Users")
+	contents = os.listdir(usersPath)
+	files = []
+	for f in contents:
+		isFile = os.path.isfile(os.path.join(usersPath, f))
+		if (isFile):
+			files.append(f)
+	return files
+
 def createPaths(paths):
 	for path in paths:
 		if(os.path.isdir(path)):
