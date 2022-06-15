@@ -84,15 +84,23 @@ def authenticate(username, password):
     headers['X-Riot-Entitlements-JWT'] = entitlements_token
     del headers['Host']
     session.close()
-    return headers
+    return [headers, user_id]
 
 def getVersion():
     data = requests.get('https://valorant-api.com/v1/version')
     data = data.json()['data']
     return data["riotClientVersion"]
 
-def getHeaders(username, password):
-    headers = authenticate(username, password)
+def setHeaders(headers):
     headers['X-Riot-ClientPlatform'] = encodeJSON(platform)
     headers['X-Riot-ClientVersion'] = getVersion()
+
+def getHeaders(username, password):
+    headers = authenticate(username, password)[0]
+    setHeaders(headers)
     return headers
+
+def getAuth(username, password):
+    auth = authenticate(username, password)
+    setHeaders(auth[0])
+    return auth
