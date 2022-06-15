@@ -10,14 +10,14 @@ import json
 def pick(options):
     return pickFunc(options)[0]
 
-def getPreference():
+def getPreference(headers):
     apiURL = 'https://playerpreferences.riotgames.com/playerPref/v3/getPreference/Ares.PlayerSettings'
     rawData = requests.get(apiURL, headers=headers)
     jsonData = json.loads(rawData.text)
     data = toData(jsonData["data"])
     return data
 
-def setPreference(data):
+def setPreference(data, headers):
     rawData = {
         "type": "Ares.PlayerSettings",
         "data": toMagic(data)
@@ -26,9 +26,9 @@ def setPreference(data):
     req = requests.put(apiURL, headers=headers, json=rawData)
     return req
 
-def importFromFile(cfg):
+def importFromFile(cfg, headers):
     data = configRead(cfg)
-    req = setPreference(data)
+    req = setPreference(data, headers)
     print(f'Status code: {req.status_code}')
 
 def getUsers():
@@ -45,16 +45,15 @@ def main():
     action, user, cfg = menu()
     passwd = getPass(user)
 
-    global headers
     headers = getHeaders(user, passwd)
 
     if (action == "dump"):
-        configWrite(getPreference(), cfg)
+        configWrite(getPreference(headers), cfg)
     elif (action == "import"):
-        configWrite(getPreference(), f'{user}.bck.json')
-        importFromFile(cfg)
+        configWrite(getPreference(headers), f'{user}.bck.json')
+        importFromFile(cfg, headers)
     elif (action == "restore"):
-        importFromFile(f'{user}.bck.json')
+        importFromFile(f'{user}.bck.json', headers)
 
 def menu():
     if (len(argv) == 1):
