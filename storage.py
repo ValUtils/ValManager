@@ -35,11 +35,14 @@ def configRead(file):
 	return jsonRead(getCfgPath(file))
 
 def configList():
-	usersPath = getFilePath("configs")
-	contents = os.listdir(usersPath)
+	return listDir("configs")
+
+def listDir(dir):
+	directory = getFilePath(dir)
+	contents = os.listdir(directory)
 	files = []
 	for f in contents:
-		isFile = os.path.isfile(os.path.join(usersPath, f))
+		isFile = os.path.isfile(os.path.join(directory, f))
 		if (isFile):
 			files.append(f)
 	return files
