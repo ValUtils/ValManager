@@ -5,8 +5,8 @@ import json
 def getFilePath(file):
 	return os.path.join(settingsPath, file)
 
-def getUsersPath(file):
-	return os.path.join("Users", file)
+def getCfgPath(file):
+	return os.path.join("configs", file)
 
 def saveToDrive(data, file):
 	f = open(getFilePath(file), "w")
@@ -29,13 +29,13 @@ def jsonRead(file):
 	return data
 
 def configWrite(data,file):
-	jsonWrite(data, getUsersPath(file))
+	jsonWrite(data, getCfgPath(file))
 
 def configRead(file):
-	return jsonRead(getUsersPath(file))
+	return jsonRead(getCfgPath(file))
 
 def configList():
-	usersPath = getFilePath("Users")
+	usersPath = getFilePath("configs")
 	contents = os.listdir(usersPath)
 	files = []
 	for f in contents:
@@ -55,7 +55,7 @@ def setPath():
 	if (platform.system() == "Windows"):
 		appdata = os.getenv('APPDATA')
 		settingsPath = appdata + "\\ValConfig"
-		usersPath = getFilePath("Users")
-		createPaths([settingsPath, usersPath])
+		cfgPath = getFilePath("configs")
+		createPaths([settingsPath, cfgPath])
 
 setPath()
