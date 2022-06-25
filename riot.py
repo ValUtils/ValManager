@@ -28,6 +28,13 @@ FORCED_CIPHERS = [
 
 userAgent = "RiotClient/51.0.0.4429735.4429735 rso-auth (Windows;10;;Professional, x64)"
 
+def getToken(uri):
+    pattern = re.compile('access_token=((?:[a-zA-Z]|\d|\.|-|_)*).*id_token=((?:[a-zA-Z]|\d|\.|-|_)*).*expires_in=(\d*)')
+    data = pattern.findall(uri)[0]
+    access_token = data[0]
+    id_token = data[1]
+    return [access_token, id_token]
+
 def authenticate(username, password):
     class SSLAdapter(HTTPAdapter):
         def init_poolmanager(self, *args: Any, **kwargs: Any) -> None:
@@ -64,10 +71,8 @@ def authenticate(username, password):
     }
 
     r = session.put(f'https://auth.riotgames.com/api/v1/authorization', json=data, headers=headers)
-    pattern = re.compile('access_token=((?:[a-zA-Z]|\d|\.|-|_)*).*id_token=((?:[a-zA-Z]|\d|\.|-|_)*).*expires_in=(\d*)')
-    data = pattern.findall(r.json()['response']['parameters']['uri'])[0]
-    access_token = data[0]
-    id_token = data[1]
+    uri = r.json()['response']['parameters']['uri']
+    access_token, id_token = getToken(uri)
 
     headers = {
         'Accept-Encoding': 'gzip, deflate, br',
