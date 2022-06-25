@@ -1,12 +1,10 @@
+from os.path import join as joinPath, isfile, isdir
 import os
 import platform
 import json
 
 def getFilePath(file):
-	return os.path.join(settingsPath, file)
-
-def getCfgPath(file):
-	return os.path.join("configs", file)
+	return joinPath(settingsPath, file)
 
 def saveToDrive(data, file):
 	f = open(getFilePath(file), "w")
@@ -29,10 +27,10 @@ def jsonRead(file):
 	return data
 
 def configWrite(data,file):
-	jsonWrite(data, getCfgPath(file))
+	jsonWrite(data, joinPath("configs", file))
 
 def configRead(file):
-	return jsonRead(getCfgPath(file))
+	return jsonRead(joinPath("configs", file))
 
 def configList():
 	return listDir("configs")
@@ -42,14 +40,14 @@ def listDir(dir):
 	contents = os.listdir(directory)
 	files = []
 	for f in contents:
-		isFile = os.path.isfile(os.path.join(directory, f))
+		isFile = isfile(joinPath(directory, f))
 		if (isFile):
 			files.append(f)
 	return files
 
 def createPaths(paths):
 	for path in paths:
-		if(os.path.isdir(path)):
+		if(isdir(path)):
 			continue
 		os.mkdir(path)
 
