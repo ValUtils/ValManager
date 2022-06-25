@@ -1,30 +1,12 @@
 from storage import *
-from parsing import *
+from api import *
 from pick import pick as pickFunc
 from getpass import getpass
 from sys import argv
 from riot import getHeaders
-import requests
-import json
 
 def pick(options):
     return pickFunc(options)[0]
-
-def getPreference(headers):
-    apiURL = 'https://playerpreferences.riotgames.com/playerPref/v3/getPreference/Ares.PlayerSettings'
-    rawData = requests.get(apiURL, headers=headers)
-    jsonData = json.loads(rawData.text)
-    data = toData(jsonData["data"])
-    return data
-
-def setPreference(data, headers):
-    rawData = {
-        "type": "Ares.PlayerSettings",
-        "data": toMagic(data)
-    }
-    apiURL = 'https://playerpreferences.riotgames.com/playerPref/v3/savePreference'
-    req = requests.put(apiURL, headers=headers, json=rawData)
-    return req
 
 def importFromFile(cfg, headers):
     data = configRead(cfg)
