@@ -48,6 +48,7 @@ def authenticate(username, password):
         'nonce': '1',
         'redirect_uri': 'https://playvalorant.com/opt_in',
         'response_type': 'token id_token',
+        'scope': 'account openid',
     }
 
     headers = {
@@ -66,6 +67,7 @@ def authenticate(username, password):
     pattern = re.compile('access_token=((?:[a-zA-Z]|\d|\.|-|_)*).*id_token=((?:[a-zA-Z]|\d|\.|-|_)*).*expires_in=(\d*)')
     data = pattern.findall(r.json()['response']['parameters']['uri'])[0]
     access_token = data[0]
+    id_token = data[1]
 
     headers = {
         'Accept-Encoding': 'gzip, deflate, br',
@@ -84,7 +86,7 @@ def authenticate(username, password):
     headers['X-Riot-Entitlements-JWT'] = entitlements_token
     del headers['Host']
     session.close()
-    return [headers, user_id]
+    return [headers, user_id, id_token]
 
 def getVersion():
     data = requests.get('https://valorant-api.com/v1/version')
