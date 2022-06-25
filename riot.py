@@ -71,7 +71,6 @@ def authenticate(username, password):
 
     headers = {
         'Accept-Encoding': 'gzip, deflate, br',
-        'Host': "entitlements.auth.riotgames.com",
         'User-Agent': userAgent,
         'Authorization': f'Bearer {access_token}',
     }
@@ -79,12 +78,9 @@ def authenticate(username, password):
     r = session.post('https://entitlements.auth.riotgames.com/api/token/v1', headers=headers, json={})
     entitlements_token = r.json()['entitlements_token']
 
-    headers["Host"] = "auth.riotgames.com"
-
     r = session.post('https://auth.riotgames.com/userinfo', headers=headers, json={})
     user_id = r.json()['sub']
     headers['X-Riot-Entitlements-JWT'] = entitlements_token
-    del headers['Host']
     session.close()
     return [headers, user_id, id_token]
 
