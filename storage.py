@@ -47,6 +47,7 @@ def loadList(sub):
 
 def listDir(dir):
 	directory = getFilePath(dir)
+	createPaths([dir])
 	contents = os.listdir(directory)
 	files = []
 	for f in contents:
