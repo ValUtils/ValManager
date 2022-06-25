@@ -35,6 +35,14 @@ def getToken(uri):
     id_token = data[1]
     return [access_token, id_token]
 
+def post(session, access_token, url):
+    headers = {
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Authorization': f'Bearer {access_token}',
+    }
+    r = session.post(url, headers=headers, json={})
+    return r.json()
+
 def authenticate(username, password):
     class SSLAdapter(HTTPAdapter):
         def init_poolmanager(self, *args: Any, **kwargs: Any) -> None:
@@ -45,11 +53,32 @@ def authenticate(username, password):
 
     session = requests.session()
     session.headers = OrderedDict({
+        "User-Agent": userAgent,
         "Accept-Language": "en-US,en;q=0.9",
         "Accept": "application/json, text/plain, */*"
     })
     session.mount('https://', SSLAdapter())
 
+    setupAuth(session)
+
+    access_token, id_token = getAuthToken(session, username, password)
+
+    entitlements_token = getEntitlement(session, access_token)
+
+    user_id = getUserInfo(session, access_token)
+
+    session.close()
+
+    headers = {
+        'Accept-Encoding': 'gzip, deflate, br',
+        'User-Agent': userAgent,
+        'Authorization': f'Bearer {access_token}',
+        'X-Riot-Entitlements-JWT': entitlements_token
+    }
+
+    return [headers, user_id, id_token]
+
+def setupAuth(session):
     data = {
         'client_id': 'play-valorant-web-prod',
         'nonce': '1',
@@ -58,36 +87,30 @@ def authenticate(username, password):
         'scope': 'account openid',
     }
 
-    headers = {
-        'User-Agent': userAgent
-    }
+    session.post(f'https://auth.riotgames.com/api/v1/authorization', json=data)
 
-    r = session.post(f'https://auth.riotgames.com/api/v1/authorization', json=data, headers=headers)
-
+def getAuthToken(session, username, password):
     data = {
         'type': 'auth',
         'username': username,
         'password': password
     }
 
-    r = session.put(f'https://auth.riotgames.com/api/v1/authorization', json=data, headers=headers)
-    uri = r.json()['response']['parameters']['uri']
+    r = session.put(f'https://auth.riotgames.com/api/v1/authorization', json=data)
+    data = r.json()
+    if ("error" in data):
+        raise BaseException(data['error'])
+    uri = data['response']['parameters']['uri']
     access_token, id_token = getToken(uri)
+    return [access_token, id_token]
 
-    headers = {
-        'Accept-Encoding': 'gzip, deflate, br',
-        'User-Agent': userAgent,
-        'Authorization': f'Bearer {access_token}',
-    }
+def getEntitlement(session, access_token):
+    data = post(session, access_token, "https://entitlements.auth.riotgames.com/api/token/v1")
+    return data['entitlements_token']
 
-    r = session.post('https://entitlements.auth.riotgames.com/api/token/v1', headers=headers, json={})
-    entitlements_token = r.json()['entitlements_token']
-
-    r = session.post('https://auth.riotgames.com/userinfo', headers=headers, json={})
-    user_id = r.json()['sub']
-    headers['X-Riot-Entitlements-JWT'] = entitlements_token
-    session.close()
-    return [headers, user_id, id_token]
+def getUserInfo(session, access_token):
+    data = post(session, access_token, "https://auth.riotgames.com/userinfo")
+    return data['sub']
 
 def getVersion():
     data = requests.get('https://valorant-api.com/v1/version')
