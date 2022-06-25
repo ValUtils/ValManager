@@ -36,7 +36,7 @@ def configList():
 	return listDir("configs")
 
 def loadWrite(data, file, sub):
-	createPaths([joinPath(settingsPath, "loadouts", sub)])
+	createPath(joinPath(settingsPath, "loadouts", sub))
 	jsonWrite(data, joinPath("loadouts", sub, file))
 
 def loadRead(file, sub):
@@ -47,7 +47,7 @@ def loadList(sub):
 
 def listDir(dir):
 	directory = getFilePath(dir)
-	createPaths([directory])
+	createPath(directory)
 	contents = os.listdir(directory)
 	files = []
 	for f in contents:
@@ -56,18 +56,21 @@ def listDir(dir):
 			files.append(f)
 	return files
 
-def createPaths(paths):
-	for path in paths:
-		if(isdir(path)):
-			continue
-		os.mkdir(path)
+def createPath(path):
+	if(isdir(path)):
+		return
+	os.mkdir(path)
 
 def setPath():
 	global settingsPath
 	if (platform.system() == "Windows"):
 		appdata = os.getenv('APPDATA')
 		settingsPath = appdata + "\\ValConfig"
-		cfgPath = getFilePath("configs")
-		createPaths([settingsPath, cfgPath])
+		createPath(settingsPath)
+	if (settingsPath):
+		folders = ["configs", "loadouts"]
+		for f in folders:
+			createPath(getFilePath(f))
+
 
 setPath()
