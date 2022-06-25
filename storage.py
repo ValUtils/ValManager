@@ -35,6 +35,16 @@ def configRead(file):
 def configList():
 	return listDir("configs")
 
+def loadWrite(data, file, sub):
+	createPaths([joinPath(settingsPath, "loadouts", sub)])
+	jsonWrite(data, joinPath("loadouts", sub, file))
+
+def loadRead(file, sub):
+	return jsonRead(joinPath("loadouts", sub, file))
+
+def loadList(sub):
+	return listDir(joinPath(settingsPath, "loadouts", sub))
+
 def listDir(dir):
 	directory = getFilePath(dir)
 	contents = os.listdir(directory)
