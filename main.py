@@ -13,14 +13,18 @@ def importFromFile(cfg, auth):
     req = setPreference(data, auth)
     print(f'Status code: {req.status_code}')
 
+def reAuth():
+    print(f"Wrong username or password, type username and password to retry!")
+    username = input("User: ")
+    password = inputPass("Password: ")
+    return authenticate(username, password)
+
 def getAuth(username, password):
     try:
         return authenticate(username, password)
     except BaseException as err:
-        print("Auth error, type username and password to retry!")
-        username = input("User: ")
-        password = inputPass("Password: ")
-        return authenticate(username, password)
+        if (err.args[0] == "auth_failure"):
+            return reAuth()
 
 def getUsers():
     users = jsonRead("users.json")
