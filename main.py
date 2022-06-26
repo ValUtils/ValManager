@@ -32,6 +32,11 @@ def getPass(user):
         return users[user]
     return inputPass("Password: ")
 
+def newUser(user, password):
+    users = jsonRead("users.json")
+    users[user] = password
+    jsonWrite(users, "users.json")
+
 def main():
     mode, action, user, cfg = menu()
     passwd = getPass(user)
@@ -75,9 +80,12 @@ def getUser():
     users = getUsers()
     users.append("New...")
     choice = pick(users)
-    if (choice == "New..."):
-        return input("User: ")
-    return choice
+    if (choice != "New..."):
+        return choice
+    user = input("User: ")
+    passwd = inputPass("Password: ")
+    newUser(user, passwd)
+    return user
 
 def filterList(array, str):
     filteredList = list(filter(lambda f: str not in f, array))
