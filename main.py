@@ -2,7 +2,7 @@ from storage import *
 from riot import *
 from api import *
 from pick import pick as pickFunc
-from getpass import getpass
+from getpass import getpass as inputPass
 from sys import argv
 
 def pick(options):
@@ -21,7 +21,7 @@ def getPass(user):
     users = jsonRead("users.json")
     if user in users:
         return users[user]
-    return getpass("Password: ")
+    return inputPass("Password: ")
 
 def main():
     mode, action, user, cfg = menu()
