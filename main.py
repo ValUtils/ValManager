@@ -79,9 +79,16 @@ def getUser():
         return input("User: ")
     return choice
 
-def chooseFile(fileList, new):
-    if (new):
+def filterList(array, str):
+    filteredList = list(filter(lambda f: str not in f, array))
+    array.clear()
+    array.extend(filteredList)
+
+def chooseFile(fileList, dump):
+    if (dump):
         fileList.append("New...")
+        filterList(fileList, "backup.json")
+        filterList(fileList, ".bck.json")
     choice = pick(fileList)
     if (choice == "New..."):
         return input("Filename: ")
