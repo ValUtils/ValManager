@@ -69,14 +69,14 @@ def authenticate(username, password):
 
     session.close()
 
-    headers = {
-        'Accept-Encoding': 'gzip, deflate, br',
-        'User-Agent': userAgent,
-        'Authorization': f'Bearer {access_token}',
-        'X-Riot-Entitlements-JWT': entitlements_token
+    auth = {
+        "access_token": access_token,
+        "id_token": id_token,
+        "entitlements_token": entitlements_token,
+        "user_id": user_id
     }
 
-    return [headers, user_id, id_token]
+    return auth
 
 def setupAuth(session):
     data = {
@@ -117,16 +117,12 @@ def getVersion():
     data = data.json()['data']
     return data["riotClientVersion"]
 
-def setHeaders(headers):
-    headers['X-Riot-ClientPlatform'] = encodeJSON(platform)
-    headers['X-Riot-ClientVersion'] = getVersion()
-
-def getHeaders(username, password):
-    headers = authenticate(username, password)[0]
-    setHeaders(headers)
-    return headers
-
-def getAuth(username, password):
-    auth = authenticate(username, password)
-    setHeaders(auth[0])
-    return auth
+def makeHeaders(auth):
+    return {
+        'Accept-Encoding': 'gzip, deflate, br',
+        'User-Agent': userAgent,
+        'Authorization': f'Bearer {auth["access_token"]}',
+        'X-Riot-Entitlements-JWT': auth["entitlements_token"],
+        'X-Riot-ClientPlatform': encodeJSON(platform),
+        'X-Riot-ClientVersion': getVersion()
+    }

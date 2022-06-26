@@ -8,10 +8,19 @@ from sys import argv
 def pick(options):
     return pickFunc(options)[0]
 
-def importFromFile(cfg, headers):
+def importFromFile(cfg, auth):
     data = configRead(cfg)
-    req = setPreference(data, headers)
+    req = setPreference(data, auth)
     print(f'Status code: {req.status_code}')
+
+def getAuth(username, password):
+    try:
+        return authenticate(username, password)
+    except BaseException as err:
+        print("Auth error, type username and password to retry!")
+        username = input("User: ")
+        password = inputPass("Password: ")
+        return authenticate(username, password)
 
 def getUsers():
     users = jsonRead("users.json")
@@ -32,28 +41,28 @@ def main():
         loadout(action, user, passwd, cfg)
 
 def config(action, user, passwd, cfg):
-    headers = getHeaders(user, passwd)
+    auth = getAuth(user, passwd)
     if (action == "dump"):
-        configWrite(getPreference(headers), cfg)
+        configWrite(getPreference(auth), cfg)
     elif (action == "import"):
-        configWrite(getPreference(headers), f'{user}.bck.json')
-        importFromFile(cfg, headers)
+        configWrite(getPreference(auth), f'{user}.bck.json')
+        importFromFile(cfg, auth)
     elif (action == "restore"):
-        importFromFile(f'{user}.bck.json', headers)
+        importFromFile(f'{user}.bck.json', auth)
 
 def loadout(action, user, passwd, cfg):
     passwd = getPass(user)
 
-    [headers, RSO, id_token] = getAuth(user, passwd)
-    region = getRegion(id_token,headers)
+    auth = getAuth(user, passwd)
+    region = getRegion(auth)
 
     if (action == "dump"):
-        loadWrite(getLoadOut(RSO, headers, region), cfg, user)
+        loadWrite(getLoadOut(auth, region), cfg, user)
     elif (action == "import"):
-        loadWrite(getLoadOut(RSO, headers, region), 'backup.json', user)
-        setLoadOut(RSO, headers, region, loadRead(cfg, user))
+        loadWrite(getLoadOut(auth, region), 'backup.json', user)
+        setLoadOut(auth, region, loadRead(cfg, user))
     elif (action == "restore"):
-        setLoadOut(RSO, headers, region, loadRead("backup.json", user))
+        setLoadOut(auth, region, loadRead("backup.json", user))
 
 def menu():
     if (len(argv) == 1):
