@@ -10,7 +10,7 @@ def pick(options):
 
 def importFromFile(cfg, auth):
     data = configRead(cfg)
-    req = setPreference(data, auth)
+    req = setPreference(auth, data)
     print(f'Status code: {req.status_code}')
 
 def reAuth():

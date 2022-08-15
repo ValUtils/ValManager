@@ -18,7 +18,7 @@ def getPreference(auth):
     data = toData(jsonData["data"])
     return data
 
-def setPreference(data, auth):
+def setPreference(auth, data):
     rawData = {
         "type": "Ares.PlayerSettings",
         "data": toMagic(data)
