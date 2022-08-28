@@ -35,7 +35,7 @@ def getToken(uri):
     id_token = data[1]
     return [access_token, id_token]
 
-def post(session, access_token, url):
+def post(session: requests.Session, access_token, url):
     headers = {
         'Accept-Encoding': 'gzip, deflate, br',
         'Authorization': f'Bearer {access_token}',
@@ -43,7 +43,7 @@ def post(session, access_token, url):
     r = session.post(url, headers=headers, json={})
     return r.json()
 
-def authenticate(username, password):
+def setupSession() -> requests.Session:
     class SSLAdapter(HTTPAdapter):
         def init_poolmanager(self, *args: Any, **kwargs: Any) -> None:
             ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
@@ -58,6 +58,10 @@ def authenticate(username, password):
         "Accept": "application/json, text/plain, */*"
     })
     session.mount('https://', SSLAdapter())
+    return session
+
+def authenticate(username, password):
+    session = setupSession()
 
     setupAuth(session)
 
@@ -78,7 +82,7 @@ def authenticate(username, password):
 
     return auth
 
-def setupAuth(session):
+def setupAuth(session: requests.Session):
     data = {
         'client_id': 'play-valorant-web-prod',
         'nonce': '1',
@@ -89,7 +93,7 @@ def setupAuth(session):
 
     session.post(f'https://auth.riotgames.com/api/v1/authorization', json=data)
 
-def getAuthToken(session, username, password):
+def getAuthToken(session: requests.Session, username, password):
     data = {
         'type': 'auth',
         'username': username,
@@ -104,11 +108,11 @@ def getAuthToken(session, username, password):
     access_token, id_token = getToken(uri)
     return [access_token, id_token]
 
-def getEntitlement(session, access_token):
+def getEntitlement(session: requests.Session, access_token):
     data = post(session, access_token, "https://entitlements.auth.riotgames.com/api/token/v1")
     return data['entitlements_token']
 
-def getUserInfo(session, access_token):
+def getUserInfo(session: requests.Session, access_token):
     data = post(session, access_token, "https://auth.riotgames.com/userinfo")
     return data['sub']
 
