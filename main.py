@@ -91,8 +91,8 @@ def getUser():
     newUser(user, passwd)
     return user
 
-def filterList(array, str):
-    filteredList = list(filter(lambda f: str not in f, array))
+def filterList(array: list[str], string: str):
+    filteredList = [s for s in array if string not in s]
     array.clear()
     array.extend(filteredList)
 
