@@ -1,30 +1,12 @@
 from storage import *
-from riot import *
-from api import *
 from pick import pick as pickFunc
 from getpass import getpass as inputPass
+from loadout import loadout, loadList
+from config import config, configList
 from sys import argv
 
 def pick(options):
     return pickFunc(options)[0]
-
-def importFromFile(cfg, auth):
-    data = configRead(cfg)
-    req = setPreference(auth, data)
-    print(f'Status code: {req.status_code}')
-
-def reAuth():
-    print(f"Wrong username or password, type username and password to retry!")
-    username = input("User: ")
-    password = inputPass("Password: ")
-    return authenticate(username, password)
-
-def getAuth(username, password):
-    try:
-        return authenticate(username, password)
-    except BaseException as err:
-        if (err.args[0] == "auth_failure"):
-            return reAuth()
 
 def getUsers():
     users = jsonRead(settingsPath / "users.json")
@@ -48,30 +30,6 @@ def main():
         config(action, user, passwd, cfg)
     elif (mode == "loadout"):
         loadout(action, user, passwd, cfg)
-
-def config(action, user, passwd, cfg):
-    auth = getAuth(user, passwd)
-    if (action == "dump"):
-        configWrite(getPreference(auth), cfg)
-    elif (action == "import"):
-        configWrite(getPreference(auth), f'{user}.bck.json')
-        importFromFile(cfg, auth)
-    elif (action == "restore"):
-        importFromFile(f'{user}.bck.json', auth)
-
-def loadout(action, user, passwd, cfg):
-    passwd = getPass(user)
-
-    auth = getAuth(user, passwd)
-    region = getRegion(auth)
-
-    if (action == "dump"):
-        loadWrite(getLoadOut(auth, region), cfg, user)
-    elif (action == "import"):
-        loadWrite(getLoadOut(auth, region), 'backup.json', user)
-        setLoadOut(auth, region, loadRead(cfg, user))
-    elif (action == "restore"):
-        setLoadOut(auth, region, loadRead("backup.json", user))
 
 def menu():
     if (len(argv) == 1):
