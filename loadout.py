@@ -7,11 +7,12 @@ def loadout(action, user, passwd, cfg):
     region = getRegion(auth)
 
     if (action == "dump"):
-        loadWrite(getLoadOut(auth, region), cfg, user)
+        saveToFile(cfg, auth, region, user)
     elif (action == "import"):
-        loadWrite(getLoadOut(auth, region), 'backup.json', user)
-        setLoadOut(auth, region, loadRead(cfg, user))
+        saveToFile("backup.json", auth, region, user)
+        importFromFile(cfg, auth, region, user)
     elif (action == "restore"):
+        importFromFile("backup.json", auth, region, user)
         setLoadOut(auth, region, loadRead("backup.json", user))
 
 def loadWrite(data, file, sub):
@@ -23,3 +24,12 @@ def loadRead(file, sub):
 
 def loadList(sub):
     return listDir(settingsPath / "loadouts" / sub)
+
+def importFromFile(cfg, auth, region, sub):
+    data = loadRead(cfg, sub)
+    req = setLoadOut(auth, region, data)
+    print(f'Status code: {req.status_code}')
+
+def saveToFile(cfg, auth, region, sub):
+    data = getLoadOut(auth, region)
+    loadWrite(data, cfg, sub)

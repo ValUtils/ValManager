@@ -5,9 +5,9 @@ from auth import getAuth
 def config(action, user, passwd, cfg):
     auth = getAuth(user, passwd)
     if (action == "dump"):
-        configWrite(getPreference(auth), cfg)
+        saveToFile(cfg, auth)
     elif (action == "import"):
-        configWrite(getPreference(auth), f'{user}.bck.json')
+        saveToFile(f'{user}.bck.json', auth)
         importFromFile(cfg, auth)
     elif (action == "restore"):
         importFromFile(f'{user}.bck.json', auth)
@@ -27,3 +27,7 @@ def importFromFile(cfg, auth):
     data = configRead(cfg)
     req = setPreference(auth, data)
     print(f'Status code: {req.status_code}')
+
+def saveToFile(cfg, auth):
+    data = getPreference(auth)
+    configWrite(data, cfg)
