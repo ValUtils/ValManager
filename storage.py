@@ -1,18 +1,15 @@
-from os.path import join as joinPath, isfile, isdir
-import os
+from pathlib import Path
+from os import getenv
 import platform
 import json
 
-def getFilePath(file):
-    return joinPath(settingsPath, file)
-
 def saveToDrive(data, file):
-    f = open(getFilePath(file), "w")
+    f = open(file, "w")
     f.write(data)
     f.close()
 
 def readFromDrive(file):
-    f = open(getFilePath(file), "r")
+    f = open(file, "r")
     data = f.read()
     f.close()
     return data
@@ -27,50 +24,43 @@ def jsonRead(file):
     return data
 
 def configWrite(data,file):
-    jsonWrite(data, joinPath("configs", file))
+    jsonWrite(data, settingsPath / "configs" / file)
 
 def configRead(file):
-    return jsonRead(joinPath("configs", file))
+    return jsonRead(settingsPath / "configs" / file)
 
 def configList():
-    return listDir("configs")
+    return listDir(settingsPath / "configs")
 
 def loadWrite(data, file, sub):
-    createPath(joinPath(settingsPath, "loadouts", sub))
-    jsonWrite(data, joinPath("loadouts", sub, file))
+    createPath(settingsPath / "loadouts" / sub)
+    jsonWrite(data, settingsPath / "loadouts" / sub / file)
 
 def loadRead(file, sub):
-    return jsonRead(joinPath("loadouts", sub, file))
+    return jsonRead(settingsPath / "loadouts" / sub / file)
 
 def loadList(sub):
-    return listDir(joinPath(settingsPath, "loadouts", sub))
+    return listDir(settingsPath / "loadouts" / sub)
 
-def listDir(dir):
-    directory = getFilePath(dir)
-    createPath(directory)
-    contents = os.listdir(directory)
-    files = []
-    for f in contents:
-        isFile = isfile(joinPath(directory, f))
-        if (isFile):
-            files.append(f)
+def listDir(dir: Path):
+    createPath(dir)
+    files = [f.name for f in dir.iterdir() if f.is_file()]
     return files
 
-def createPath(path):
-    if(isdir(path)):
+def createPath(path: Path):
+    if(path.is_dir()):
         return
-    os.mkdir(path)
+    path.mkdir()
 
 def setPath():
     global settingsPath
     if (platform.system() == "Windows"):
-        appdata = os.getenv('APPDATA')
-        settingsPath = appdata + "\\ValConfig"
+        appdata = Path(getenv('APPDATA'))
+        settingsPath = appdata / "ValConfig"
         createPath(settingsPath)
     if (settingsPath):
         folders = ["configs", "loadouts"]
         for f in folders:
-            createPath(getFilePath(f))
-
+            createPath(settingsPath / f)
 
 setPath()

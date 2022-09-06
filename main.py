@@ -27,17 +27,17 @@ def getAuth(username, password):
             return reAuth()
 
 def getUsers():
-    users = jsonRead("users.json")
+    users = jsonRead(settingsPath / "users.json")
     return list(users.keys())
 
 def getPass(user):
-    users = jsonRead("users.json")
+    users = jsonRead(settingsPath / "users.json")
     if user in users:
         return users[user]
     return inputPass("Password: ")
 
 def newUser(user, password):
-    users = jsonRead("users.json")
+    users = jsonRead(settingsPath / "users.json")
     users[user] = password
     jsonWrite(users, "users.json")
 
