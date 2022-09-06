@@ -30,7 +30,9 @@ def configRead(file):
     return jsonRead(settingsPath / "configs" / file)
 
 def configList():
-    return listDir(settingsPath / "configs")
+    files = listDir(settingsPath / "configs")
+    files.sort(key=lambda f: "bck.json" in f)
+    return files
 
 def loadWrite(data, file, sub):
     createPath(settingsPath / "loadouts" / sub)
