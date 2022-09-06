@@ -5,7 +5,7 @@ def reAuth():
     print(f"Wrong username or password, type username and password to retry!")
     username = input("User: ")
     password = inputPass("Password: ")
-    return authenticate(username, password)
+    return getAuth(username, password)
 
 def getAuth(username, password):
     try:
