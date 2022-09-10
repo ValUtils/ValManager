@@ -3,25 +3,11 @@ from pick import pick as pickFunc
 from getpass import getpass as inputPass
 from loadout import loadout, loadList
 from config import config, configList
+from auth import getUsers, getPass, newUser
 from sys import argv
 
 def pick(options):
     return pickFunc(options)[0]
-
-def getUsers():
-    users = jsonRead(settingsPath / "users.json")
-    return list(users.keys())
-
-def getPass(user):
-    users = jsonRead(settingsPath / "users.json")
-    if user in users:
-        return users[user]
-    return inputPass("Password: ")
-
-def newUser(user, password):
-    users = jsonRead(settingsPath / "users.json")
-    users[user] = password
-    jsonWrite(users, "users.json")
 
 def main():
     mode, action, user, cfg = menu()
