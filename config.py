@@ -11,6 +11,8 @@ def config(action, user, passwd, cfg):
         importFromFile(cfg, auth)
     elif (action == "restore"):
         importFromFile(f'{user}.bck.json', auth)
+    elif (action == "backup"):
+        saveToFile(f'{user}.bck.json', auth)
 
 def configWrite(data,file):
     jsonWrite(data, settingsPath / "configs" / file)

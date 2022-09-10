@@ -52,9 +52,9 @@ def chooseFile(fileList, dump):
 
 def getOptions():
     mode = pick(["config", "loadout"])
-    action = pick(["dump", "import", "restore"])
+    action = pick(["dump", "import", "restore", "backup"])
     user = getUser()
-    if (action == "restore"):
+    if (action in ["restore", "backup"]):
         return [mode, action, user, ""]
     if (mode == "config"):
         cfg = chooseFile(configList(), action == "dump")

@@ -14,6 +14,8 @@ def loadout(action, user, passwd, cfg):
     elif (action == "restore"):
         importFromFile("backup.json", auth, region, user)
         setLoadOut(auth, region, loadRead("backup.json", user))
+    elif (action == "backup"):
+        saveToFile("backup.json", auth, region, user)
 
 def loadWrite(data, file, sub):
     createPath(settingsPath / "loadouts" / sub)
