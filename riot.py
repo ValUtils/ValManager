@@ -14,119 +14,119 @@ platform = {
 }
 
 FORCED_CIPHERS = [
-    'ECDHE-ECDSA-AES128-GCM-SHA256',
-    'ECDHE-ECDSA-CHACHA20-POLY1305',
-    'ECDHE-RSA-AES128-GCM-SHA256',
-    'ECDHE-RSA-CHACHA20-POLY1305',
-    'ECDHE+AES128',
-    'RSA+AES128',
-    'ECDHE+AES256',
-    'RSA+AES256',
-    'ECDHE+3DES',
-    'RSA+3DES'
+	'ECDHE-ECDSA-AES128-GCM-SHA256',
+	'ECDHE-ECDSA-CHACHA20-POLY1305',
+	'ECDHE-RSA-AES128-GCM-SHA256',
+	'ECDHE-RSA-CHACHA20-POLY1305',
+	'ECDHE+AES128',
+	'RSA+AES128',
+	'ECDHE+AES256',
+	'RSA+AES256',
+	'ECDHE+3DES',
+	'RSA+3DES'
 ]
 
 userAgent = "RiotClient/51.0.0.4429735.4429735 rso-auth (Windows;10;;Professional, x64)"
 
 def getToken(uri):
-    pattern = re.compile('access_token=((?:[a-zA-Z]|\d|\.|-|_)*).*id_token=((?:[a-zA-Z]|\d|\.|-|_)*).*expires_in=(\d*)')
-    data = pattern.findall(uri)[0]
-    access_token = data[0]
-    id_token = data[1]
-    return [access_token, id_token]
+	pattern = re.compile('access_token=((?:[a-zA-Z]|\d|\.|-|_)*).*id_token=((?:[a-zA-Z]|\d|\.|-|_)*).*expires_in=(\d*)')
+	data = pattern.findall(uri)[0]
+	access_token = data[0]
+	id_token = data[1]
+	return [access_token, id_token]
 
 def post(session: requests.Session, access_token, url):
-    headers = {
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Authorization': f'Bearer {access_token}',
-    }
-    r = session.post(url, headers=headers, json={})
-    return r.json()
+	headers = {
+		'Accept-Encoding': 'gzip, deflate, br',
+		'Authorization': f'Bearer {access_token}',
+	}
+	r = session.post(url, headers=headers, json={})
+	return r.json()
 
 def setupSession() -> requests.Session:
-    class SSLAdapter(HTTPAdapter):
-        def init_poolmanager(self, *args: Any, **kwargs: Any) -> None:
-            ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
-            ctx.set_ciphers(':'.join(FORCED_CIPHERS))
-            kwargs['ssl_context'] = ctx
-            return super(SSLAdapter, self).init_poolmanager(*args, **kwargs)
+	class SSLAdapter(HTTPAdapter):
+		def init_poolmanager(self, *args: Any, **kwargs: Any) -> None:
+			ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+			ctx.set_ciphers(':'.join(FORCED_CIPHERS))
+			kwargs['ssl_context'] = ctx
+			return super(SSLAdapter, self).init_poolmanager(*args, **kwargs)
 
-    session = requests.session()
-    session.headers = OrderedDict({
-        "User-Agent": userAgent,
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept": "application/json, text/plain, */*"
-    })
-    session.mount('https://', SSLAdapter())
-    return session
+	session = requests.session()
+	session.headers = OrderedDict({
+		"User-Agent": userAgent,
+		"Accept-Language": "en-US,en;q=0.9",
+		"Accept": "application/json, text/plain, */*"
+	})
+	session.mount('https://', SSLAdapter())
+	return session
 
 def authenticate(username, password):
-    session = setupSession()
+	session = setupSession()
 
-    setupAuth(session)
+	setupAuth(session)
 
-    access_token, id_token = getAuthToken(session, username, password)
+	access_token, id_token = getAuthToken(session, username, password)
 
-    entitlements_token = getEntitlement(session, access_token)
+	entitlements_token = getEntitlement(session, access_token)
 
-    user_id = getUserInfo(session, access_token)
+	user_id = getUserInfo(session, access_token)
 
-    session.close()
+	session.close()
 
-    auth = {
-        "access_token": access_token,
-        "id_token": id_token,
-        "entitlements_token": entitlements_token,
-        "user_id": user_id
-    }
+	auth = {
+		"access_token": access_token,
+		"id_token": id_token,
+		"entitlements_token": entitlements_token,
+		"user_id": user_id
+	}
 
-    return auth
+	return auth
 
 def setupAuth(session: requests.Session):
-    data = {
-        'client_id': 'riot-client',
-        'nonce': '1',
-        'redirect_uri': 'http://localhost/redirect',
-        'response_type': 'token id_token',
-        'scope': 'account openid',
-    }
+	data = {
+		'client_id': 'riot-client',
+		'nonce': '1',
+		'redirect_uri': 'http://localhost/redirect',
+		'response_type': 'token id_token',
+		'scope': 'account openid',
+	}
 
-    session.post(f'https://auth.riotgames.com/api/v1/authorization', json=data)
+	session.post(f'https://auth.riotgames.com/api/v1/authorization', json=data)
 
 def getAuthToken(session: requests.Session, username, password):
-    data = {
-        'type': 'auth',
-        'username': username,
-        'password': password
-    }
+	data = {
+		'type': 'auth',
+		'username': username,
+		'password': password
+	}
 
-    r = session.put(f'https://auth.riotgames.com/api/v1/authorization', json=data)
-    data = r.json()
-    if ("error" in data):
-        raise BaseException(data['error'])
-    uri = data['response']['parameters']['uri']
-    access_token, id_token = getToken(uri)
-    return [access_token, id_token]
+	r = session.put(f'https://auth.riotgames.com/api/v1/authorization', json=data)
+	data = r.json()
+	if ("error" in data):
+		raise BaseException(data['error'])
+	uri = data['response']['parameters']['uri']
+	access_token, id_token = getToken(uri)
+	return [access_token, id_token]
 
 def getEntitlement(session: requests.Session, access_token):
-    data = post(session, access_token, "https://entitlements.auth.riotgames.com/api/token/v1")
-    return data['entitlements_token']
+	data = post(session, access_token, "https://entitlements.auth.riotgames.com/api/token/v1")
+	return data['entitlements_token']
 
 def getUserInfo(session: requests.Session, access_token):
-    data = post(session, access_token, "https://auth.riotgames.com/userinfo")
-    return data['sub']
+	data = post(session, access_token, "https://auth.riotgames.com/userinfo")
+	return data['sub']
 
 def getVersion():
-    data = requests.get('https://valorant-api.com/v1/version')
-    data = data.json()['data']
-    return data["riotClientVersion"]
+	data = requests.get('https://valorant-api.com/v1/version')
+	data = data.json()['data']
+	return data["riotClientVersion"]
 
 def makeHeaders(auth):
-    return {
-        'Accept-Encoding': 'gzip, deflate, br',
-        'User-Agent': userAgent,
-        'Authorization': f'Bearer {auth["access_token"]}',
-        'X-Riot-Entitlements-JWT': auth["entitlements_token"],
-        'X-Riot-ClientPlatform': encodeJSON(platform),
-        'X-Riot-ClientVersion': getVersion()
-    }
+	return {
+		'Accept-Encoding': 'gzip, deflate, br',
+		'User-Agent': userAgent,
+		'Authorization': f'Bearer {auth["access_token"]}',
+		'X-Riot-Entitlements-JWT': auth["entitlements_token"],
+		'X-Riot-ClientPlatform': encodeJSON(platform),
+		'X-Riot-ClientVersion': getVersion()
+	}
