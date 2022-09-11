@@ -39,6 +39,10 @@ def setPath():
         appdata = Path(getenv('APPDATA'))
         settingsPath = appdata / "ValConfig"
         createPath(settingsPath)
+    elif (platform.system() == "Linux"):
+        home = Path(getenv('HOME'))
+        settingsPath = home / ".ValConfig"
+        createPath(settingsPath)
     if (settingsPath):
         folders = ["configs", "loadouts"]
         for f in folders:
