@@ -1,9 +1,9 @@
-from storage import *
+from .storage import *
 from pick import pick as pickFunc
 from getpass import getpass as inputPass
-from loadout import loadout, loadList
-from config import config, configList
-from auth import getUsers, getPass, newUser
+from .loadout import loadout, loadList
+from .config import config, configList
+from .auth import getUsers, getPass, newUser
 from sys import argv
 
 def pick(options):

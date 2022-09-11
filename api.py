@@ -1,5 +1,5 @@
-from riot import makeHeaders
-from parsing import *
+from .riot import makeHeaders
+from .parsing import *
 import requests
 import json
 

@@ -1,5 +1,5 @@
 from pykeepass import create_database, PyKeePass
-from storage import settingsPath
+from .storage import settingsPath
 
 class EncryptedDB:
 	db: PyKeePass

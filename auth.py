@@ -1,6 +1,6 @@
 from getpass import getpass as inputPass
-from riot import authenticate
-from password import EncryptedDB
+from .riot import authenticate
+from .password import EncryptedDB
 
 db: EncryptedDB
 

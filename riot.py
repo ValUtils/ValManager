@@ -2,7 +2,7 @@ import re
 import ssl
 import requests
 from typing import Any
-from parsing import encodeJSON
+from .parsing import encodeJSON
 from collections import OrderedDict
 from requests.adapters import HTTPAdapter
 

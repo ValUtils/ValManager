@@ -1,6 +1,6 @@
-from storage import *
-from api import *
-from auth import getAuth
+from .storage import *
+from .api import *
+from .auth import getAuth
 
 def config(action, user, passwd, cfg):
 	auth = getAuth(user, passwd)
