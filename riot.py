@@ -2,6 +2,7 @@ import re
 import ssl
 import requests
 from typing import Any
+from .structs import Auth, User
 from .parsing import encodeJSON
 from collections import OrderedDict
 from requests.adapters import HTTPAdapter
@@ -60,12 +61,12 @@ def setupSession() -> requests.Session:
 	session.mount('https://', SSLAdapter())
 	return session
 
-def authenticate(username, password):
+def authenticate(user: User):
 	session = setupSession()
 
 	setupAuth(session)
 
-	access_token, id_token = getAuthToken(session, username, password)
+	access_token, id_token = getAuthToken(session, user)
 
 	entitlements_token = getEntitlement(session, access_token)
 
@@ -73,12 +74,7 @@ def authenticate(username, password):
 
 	session.close()
 
-	auth = {
-		"access_token": access_token,
-		"id_token": id_token,
-		"entitlements_token": entitlements_token,
-		"user_id": user_id
-	}
+	auth = Auth(access_token, id_token, entitlements_token, user_id)
 
 	return auth
 
@@ -93,11 +89,11 @@ def setupAuth(session: requests.Session):
 
 	session.post(f'https://auth.riotgames.com/api/v1/authorization', json=data)
 
-def getAuthToken(session: requests.Session, username, password):
+def getAuthToken(session: requests.Session, user: User):
 	data = {
 		'type': 'auth',
-		'username': username,
-		'password': password
+		'username': user.username,
+		'password': user.password
 	}
 
 	r = session.put(f'https://auth.riotgames.com/api/v1/authorization', json=data)
@@ -121,12 +117,12 @@ def getVersion():
 	data = data.json()['data']
 	return data["riotClientVersion"]
 
-def makeHeaders(auth):
+def makeHeaders(auth: Auth):
 	return {
 		'Accept-Encoding': 'gzip, deflate, br',
 		'User-Agent': userAgent,
-		'Authorization': f'Bearer {auth["access_token"]}',
-		'X-Riot-Entitlements-JWT': auth["entitlements_token"],
+		'Authorization': f'Bearer {auth.access_token}',
+		'X-Riot-Entitlements-JWT': auth.entitlements_token,
 		'X-Riot-ClientPlatform': encodeJSON(platform),
 		'X-Riot-ClientVersion': getVersion()
 	}

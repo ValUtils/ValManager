@@ -1,24 +1,25 @@
+from .structs import Auth, AuthLoadout
 from .riot import makeHeaders
 from .parsing import *
 import requests
 import json
 
-def getAPI(url, auth):
+def getAPI(url, auth: Auth):
 	rawData = requests.get(url, headers=makeHeaders(auth))
 	jsonData = json.loads(rawData.text)
 	return jsonData
 
-def putAPI(url, auth, data):
+def putAPI(url, auth: Auth, data):
 	req = requests.put(url, headers=makeHeaders(auth), json=data)
 	return req
 
-def getPreference(auth):
+def getPreference(auth: Auth):
 	apiURL = 'https://playerpreferences.riotgames.com/playerPref/v3/getPreference/Ares.PlayerSettings'
 	jsonData = getAPI(apiURL, auth)
 	data = toData(jsonData["data"])
 	return data
 
-def setPreference(auth, data):
+def setPreference(auth: Auth, data):
 	rawData = {
 		"type": "Ares.PlayerSettings",
 		"data": toMagic(data)
@@ -27,21 +28,23 @@ def setPreference(auth, data):
 	req = putAPI(apiURL, auth, rawData)
 	return req
 
-def getLoadOut(auth, region):
-	apiURL = f'https://pd.{region}.a.pvp.net/personalization/v2/players/{auth["user_id"]}/playerloadout'
+def getLoadOut(loadAuth: AuthLoadout):
+	auth = loadAuth.auth
+	apiURL = f'https://pd.{loadAuth.region}.a.pvp.net/personalization/v2/players/{auth.user_id}/playerloadout'
 	data = getAPI(apiURL, auth)
 	del data['Subject']
 	del data['Version']
 	return data
 
-def setLoadOut(auth, region, data):
-	apiURL = f'https://pd.{region}.a.pvp.net/personalization/v2/players/{auth["user_id"]}/playerloadout'
+def setLoadOut(loadAuth: AuthLoadout, data):
+	auth = loadAuth.auth
+	apiURL = f'https://pd.{loadAuth.region}.a.pvp.net/personalization/v2/players/{auth.user_id}/playerloadout'
 	data = putAPI(apiURL, auth, data)
 	return data
 
-def getRegion(auth):
+def getRegion(auth: Auth):
 	data = {
-		"id_token": auth["id_token"]
+		"id_token": auth.id_token
 	}
 	apiURL = 'https://riot-geo.pas.si.riotgames.com/pas/v1/product/valorant'
 	data = putAPI(apiURL, auth, data)

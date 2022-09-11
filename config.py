@@ -1,9 +1,10 @@
+from .structs import Auth, User
 from .storage import *
 from .api import *
 from .auth import getAuth
 
-def config(action, user, passwd, cfg):
-	auth = getAuth(user, passwd)
+def config(action, user: User, cfg):
+	auth: Auth = getAuth(user)
 	if (action == "dump"):
 		saveToFile(cfg, auth)
 	elif (action == "import"):

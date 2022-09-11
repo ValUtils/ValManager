@@ -1,4 +1,5 @@
 from getpass import getpass as inputPass
+from .structs import User
 from .riot import authenticate
 from .password import EncryptedDB
 
@@ -9,11 +10,11 @@ def reAuth():
 	username = input("User: ")
 	password = inputPass("Password: ")
 	db.saveUser(username, password)
-	return getAuth(username, password)
+	return getAuth(User(username, password))
 
-def getAuth(username, password):
+def getAuth(user: User):
 	try:
-		return authenticate(username, password)
+		return authenticate(user)
 	except BaseException as err:
 		if (err.args[0] == "auth_failure"):
 			return reAuth()

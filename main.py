@@ -1,3 +1,4 @@
+from .structs import User
 from .storage import *
 from pick import pick as pickFunc
 from getpass import getpass as inputPass
@@ -11,17 +12,17 @@ def pick(options):
 
 def main():
 	mode, action, user, cfg = menu()
-	passwd = getPass(user)
 	if (mode == "config"):
-		config(action, user, passwd, cfg)
+		config(action, user, cfg)
 	elif (mode == "loadout"):
-		loadout(action, user, passwd, cfg)
+		loadout(action, user, cfg)
 
 def menu():
 	if (len(argv) == 1):
 		return getOptions()
 	if (len(argv) == 5):
-		s, mode, action, user, cfg = argv
+		s, mode, action, username, cfg = argv
+		user = User(username, getPass(username))
 		return [mode, action, user, cfg]
 
 def getUser():
@@ -53,13 +54,14 @@ def chooseFile(fileList, dump):
 def getOptions():
 	mode = pick(["config", "loadout"])
 	action = pick(["dump", "import", "restore", "backup"])
-	user = getUser()
+	username = getUser()
+	user = User(username, getPass(username))
 	if (action in ["restore", "backup"]):
 		return [mode, action, user, ""]
 	if (mode == "config"):
 		cfg = chooseFile(configList(), action == "dump")
 	elif (mode == "loadout"):
-		cfg = chooseFile(loadList(user), action == "dump")
+		cfg = chooseFile(loadList(username), action == "dump")
 	return [mode, action, user, cfg]
 
 if __name__ == "__main__":

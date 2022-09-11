@@ -1,21 +1,23 @@
+from .structs import AuthLoadout, User
 from .storage import *
 from .api import *
 from .auth import getAuth
 
-def loadout(action, user, passwd, cfg):
-	auth = getAuth(user, passwd)
+def loadout(action, user: User, cfg):
+	auth = getAuth(user)
 	region = getRegion(auth)
+	loadAuth = AuthLoadout(user.username, region, auth)
 
 	if (action == "dump"):
-		saveToFile(cfg, auth, region, user)
+		saveToFile(cfg, loadAuth)
 	elif (action == "import"):
-		saveToFile("backup.json", auth, region, user)
-		importFromFile(cfg, auth, region, user)
+		saveToFile("backup.json", loadAuth)
+		importFromFile(cfg, loadAuth)
 	elif (action == "restore"):
-		importFromFile("backup.json", auth, region, user)
-		setLoadOut(auth, region, loadRead("backup.json", user))
+		importFromFile("backup.json", loadAuth)
+		setLoadOut(loadAuth, loadRead("backup.json", user))
 	elif (action == "backup"):
-		saveToFile("backup.json", auth, region, user)
+		saveToFile("backup.json", loadAuth)
 
 def loadWrite(data, file, sub):
 	createPath(settingsPath / "loadouts" / sub)
@@ -27,11 +29,11 @@ def loadRead(file, sub):
 def loadList(sub):
 	return listDir(settingsPath / "loadouts" / sub)
 
-def importFromFile(cfg, auth, region, sub):
-	data = loadRead(cfg, sub)
-	req = setLoadOut(auth, region, data)
+def importFromFile(cfg, loadAuth: AuthLoadout):
+	data = loadRead(cfg, loadAuth.username)
+	req = setLoadOut(loadAuth.auth, loadAuth.region, data)
 	print(f'Status code: {req.status_code}')
 
-def saveToFile(cfg, auth, region, sub):
-	data = getLoadOut(auth, region)
-	loadWrite(data, cfg, sub)
+def saveToFile(cfg, loadAuth: AuthLoadout):
+	data = getLoadOut(loadAuth)
+	loadWrite(data, cfg, loadAuth.username)
