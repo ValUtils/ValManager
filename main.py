@@ -53,7 +53,7 @@ def chooseFile(fileList, dump):
 
 def getOptions():
 	mode = pick(["config", "loadout"])
-	action = pick(["dump", "import", "restore", "backup"])
+	action = pick(["backup", "dump", "import", "restore"])
 	username = getUser()
 	user = User(username, getPass(username))
 	if (action in ["restore", "backup"]):
