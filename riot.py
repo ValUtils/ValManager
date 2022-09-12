@@ -2,6 +2,7 @@ import re
 import ssl
 import requests
 from typing import Any
+from .exceptions import AuthException
 from .structs import Auth, User
 from .parsing import encodeJSON
 from collections import OrderedDict
@@ -99,7 +100,7 @@ def getAuthToken(session: requests.Session, user: User):
 	r = session.put(f'https://auth.riotgames.com/api/v1/authorization', json=data)
 	data = r.json()
 	if ("error" in data):
-		raise BaseException(data['error'])
+		raise AuthException(data['error'])
 	uri = data['response']['parameters']['uri']
 	access_token, id_token = getToken(uri)
 	return [access_token, id_token]
