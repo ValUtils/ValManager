@@ -30,12 +30,10 @@ FORCED_CIPHERS = [
 
 userAgent = "RiotClient/51.0.0.4429735.4429735 rso-auth (Windows;10;;Professional, x64)"
 
-def getToken(uri):
-	pattern = re.compile('access_token=((?:[a-zA-Z]|\d|\.|-|_)*).*id_token=((?:[a-zA-Z]|\d|\.|-|_)*).*expires_in=(\d*)')
-	data = pattern.findall(uri)[0]
-	access_token = data[0]
-	id_token = data[1]
-	return [access_token, id_token]
+def getToken(uri: str):
+	access_token = uri.split("access_token=")[1].split("&scope")[0]
+	token_id = uri.split("id_token=")[1].split("&")[0]
+	return access_token, token_id
 
 def post(session: requests.Session, access_token, url):
 	headers = {
