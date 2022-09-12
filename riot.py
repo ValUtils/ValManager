@@ -113,8 +113,8 @@ def getUserInfo(session: requests.Session, access_token):
 	return data['sub']
 
 def getVersion():
-	data = requests.get('https://valorant-api.com/v1/version')
-	data = data.json()['data']
+	r = requests.get('https://valorant-api.com/v1/version')
+	data = r.json()['data']
 	return data["riotClientVersion"]
 
 def makeHeaders(auth: Auth):
