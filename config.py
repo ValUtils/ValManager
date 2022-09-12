@@ -8,12 +8,12 @@ def config(action, user: User, cfg):
 	if (action == "dump"):
 		saveToFile(cfg, auth)
 	elif (action == "import"):
-		saveToFile(f'{user}.bck.json', auth)
+		saveToFile(f'{user.username}.bck.json', auth)
 		importFromFile(cfg, auth)
 	elif (action == "restore"):
-		importFromFile(f'{user}.bck.json', auth)
+		importFromFile(f'{user.username}.bck.json', auth)
 	elif (action == "backup"):
-		saveToFile(f'{user}.bck.json', auth)
+		saveToFile(f'{user.username}.bck.json', auth)
 
 def configWrite(data,file):
 	jsonWrite(data, settingsPath / "configs" / file)
