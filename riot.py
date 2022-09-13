@@ -1,4 +1,3 @@
-import re
 import ssl
 import requests
 from typing import Any
