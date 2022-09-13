@@ -1,7 +1,7 @@
-from pathlib import Path
-from os import getenv
 import platform
 import json
+from pathlib import Path
+from os import getenv
 
 def saveToDrive(data, file):
 	f = open(file, "w")

@@ -1,11 +1,12 @@
-from .structs import User
-from .storage import *
 from pick import pick as pickFunc
 from getpass import getpass as inputPass
+from sys import argv
+
+from .structs import User
+from .storage import *
 from .loadout import loadout, loadList
 from .config import config, configList
 from .auth import getUsers, getPass, newUser
-from sys import argv
 
 def pick(options):
 	return pickFunc(options)[0]

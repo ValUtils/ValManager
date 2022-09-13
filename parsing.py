@@ -1,8 +1,9 @@
-from .exceptions import DecodeException
 import json
 import jwt
 import zlib
 import base64
+
+from .exceptions import DecodeException
 
 def decode( b64string ):
 	decoded_data = base64.b64decode( b64string )

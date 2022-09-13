@@ -1,4 +1,5 @@
 from getpass import getpass as inputPass
+
 from .exceptions import AuthException
 from .structs import User
 from .riot import authenticate

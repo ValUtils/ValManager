@@ -1,8 +1,9 @@
+import requests
+import json
+
 from .structs import Auth, AuthLoadout
 from .riot import makeHeaders
 from .parsing import *
-import requests
-import json
 
 def getAPI(url, auth: Auth):
 	rawData = requests.get(url, headers=makeHeaders(auth))
