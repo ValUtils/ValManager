@@ -3,7 +3,7 @@ import requests
 from typing import Any
 from .exceptions import AuthException
 from .structs import Auth, User
-from .parsing import encodeJSON
+from .parsing import encodeJSON, magicDecode
 from collections import OrderedDict
 from requests.adapters import HTTPAdapter
 
@@ -40,7 +40,7 @@ def post(session: requests.Session, access_token, url):
 		'Authorization': f'Bearer {access_token}',
 	}
 	r = session.post(url, headers=headers, json={})
-	return r.json()
+	return magicDecode(r.text)
 
 def setupSession() -> requests.Session:
 	class SSLAdapter(HTTPAdapter):
