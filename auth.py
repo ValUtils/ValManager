@@ -42,5 +42,3 @@ def init():
 	global db
 	dbPassword = getValidPass()
 	db = EncryptedDB(dbPassword)
-
-init()

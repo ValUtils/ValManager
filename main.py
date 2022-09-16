@@ -6,12 +6,13 @@ from .structs import User
 from .storage import *
 from .loadout import loadout, loadList
 from .config import config, configList
-from .auth import getUsers, getPass, newUser
+from .auth import getUsers, getPass, init as init_auth, newUser
 
 def pick(options):
 	return pickFunc(options)[0]
 
 def main():
+	init_auth()
 	mode, action, user, cfg = menu()
 	if (mode == "config"):
 		config(action, user, cfg)
