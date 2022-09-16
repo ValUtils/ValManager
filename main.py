@@ -64,6 +64,3 @@ def getOptions():
 	elif (mode == "loadout"):
 		cfg = chooseFile(loadList(username), action == "dump")
 	return [mode, action, user, cfg]
-
-if __name__ == "__main__":
-	main()
