@@ -1,7 +1,7 @@
-from .structs import Auth, User
+from ValVault import getAuth, Auth, User
+
 from .storage import *
 from .api import *
-from .auth import getAuth
 
 def config(action, user: User, cfg):
 	auth: Auth = getAuth(user)

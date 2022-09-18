@@ -1,23 +1,8 @@
 from dataclasses import dataclass
-
-@dataclass
-class User:
-	username: str
-	password: str
-
-@dataclass
-class Auth:
-	access_token: str
-	id_token: str
-	entitlements_token: str
-	user_id: str
+from ValVault import Auth
 
 @dataclass
 class AuthLoadout(Auth):
 	username:str
 	region: str
 	auth: Auth
-
-@dataclass
-class Settings():
-	insecure: bool

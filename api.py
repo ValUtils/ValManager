@@ -1,8 +1,8 @@
 import requests
 import json
+from ValVault import makeHeaders
 
 from .structs import Auth, AuthLoadout
-from .riot import makeHeaders
 from .parsing import *
 
 def getAPI(url, auth: Auth):

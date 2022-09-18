@@ -1,12 +1,17 @@
 from pick import pick as pickFunc
 from getpass import getpass as inputPass
 from sys import argv
+from ValVault import (
+	init as init_auth,
+	getUsers,
+	getPass,
+	newUser,
+	User
+)
 
-from .structs import User
 from .storage import *
 from .loadout import loadout, loadList
 from .config import config, configList
-from .auth import getUsers, getPass, init as init_auth, newUser
 
 def pick(options):
 	return pickFunc(options)[0]

@@ -1,7 +1,8 @@
-from .structs import AuthLoadout, User
+from ValVault import getAuth, User
+
+from .structs import AuthLoadout
 from .storage import *
 from .api import *
-from .auth import getAuth
 
 def loadout(action, user: User, cfg):
 	auth = getAuth(user)

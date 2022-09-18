@@ -1,9 +1,6 @@
 import json
-import jwt
 import zlib
 import base64
-
-from .exceptions import DecodeException
 
 def decode( b64string ):
 	decoded_data = base64.b64decode( b64string )
@@ -29,14 +26,3 @@ def encodeJSON( data ):
 def decodeJSON( data ):
 	str = base64.b64decode(data.encode("utf-8"))
 	return json.loads(str)
-
-def magicDecode( string: str ):
-	try:
-		return json.loads(string)
-	except:
-		pass
-	try:
-		return jwt.decode(string, options={"verify_signature": False})
-	except:
-		pass
-	raise DecodeException(string)
