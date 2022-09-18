@@ -17,3 +17,7 @@ class AuthLoadout(Auth):
 	username:str
 	region: str
 	auth: Auth
+
+@dataclass
+class Settings():
+	insecure: bool

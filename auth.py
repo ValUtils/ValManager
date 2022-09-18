@@ -1,5 +1,6 @@
 from getpass import getpass as inputPass
 
+from .settings import get_settings
 from .exceptions import AuthException
 from .structs import User
 from .riot import authenticate
@@ -40,5 +41,9 @@ def getValidPass():
 
 def init():
 	global db
+	settings = get_settings()
+	if (settings.insecure):
+		db = EncryptedDB(" ")
+		return
 	dbPassword = getValidPass()
 	db = EncryptedDB(dbPassword)
