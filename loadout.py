@@ -16,7 +16,7 @@ def loadout(action, user: User, cfg):
 		importFromFile(cfg, loadAuth)
 	elif (action == "restore"):
 		importFromFile("backup.json", loadAuth)
-		setLoadOut(loadAuth, loadRead("backup.json", user))
+		setLoadOut(loadAuth, loadRead("backup.json", user.username))
 	elif (action == "backup"):
 		saveToFile("backup.json", loadAuth)
 
@@ -32,7 +32,7 @@ def loadList(sub):
 
 def importFromFile(cfg, loadAuth: AuthLoadout):
 	data = loadRead(cfg, loadAuth.username)
-	req = setLoadOut(loadAuth.auth, loadAuth.region, data)
+	req = setLoadOut(loadAuth, data)
 	print(f'Status code: {req.status_code}')
 
 def saveToFile(cfg, loadAuth: AuthLoadout):
