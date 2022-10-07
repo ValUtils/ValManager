@@ -29,7 +29,7 @@ def configList():
 def importFromFile(cfg, auth):
 	data = configRead(cfg)
 	req = setPreference(auth, data)
-	print(f'Status code: {req.status_code}')
+	print(f'Config status code: {req.status_code}')
 
 def saveToFile(cfg, auth):
 	data = getPreference(auth)

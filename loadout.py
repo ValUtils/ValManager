@@ -33,7 +33,7 @@ def loadList(sub):
 def importFromFile(cfg, loadAuth: AuthLoadout):
 	data = loadRead(cfg, loadAuth.username)
 	req = setLoadOut(loadAuth, data)
-	print(f'Status code: {req.status_code}')
+	print(f'Loadout status code: {req.status_code}')
 
 def saveToFile(cfg, loadAuth: AuthLoadout):
 	data = getLoadOut(loadAuth)
