@@ -17,6 +17,8 @@ def putAPI(url, auth: Auth, data):
 def getPreference(auth: Auth):
 	apiURL = 'https://playerpreferences.riotgames.com/playerPref/v3/getPreference/Ares.PlayerSettings'
 	jsonData = getAPI(apiURL, auth)
+	if ("data" not in jsonData):
+		return {}
 	data = toData(jsonData["data"])
 	return data
 
