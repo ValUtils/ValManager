@@ -6,8 +6,8 @@ from .structs import Auth, AuthLoadout
 from .parsing import *
 
 def getAPI(url, auth: Auth):
-	rawData = requests.get(url, headers=makeHeaders(auth))
-	jsonData = json.loads(rawData.text)
+	r = requests.get(url, headers=makeHeaders(auth))
+	jsonData = json.loads(r.text)
 	return jsonData
 
 def putAPI(url, auth: Auth, data):
