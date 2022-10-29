@@ -3,8 +3,8 @@ from getpass import getpass as inputPass
 from sys import argv
 from ValVault import (
 	init as init_auth,
-	getPass,
-	newUser,
+	get_pass,
+	new_user,
 	User
 )
 
@@ -29,7 +29,7 @@ def menu():
 		return getOptions()
 	if (len(argv) == 5):
 		s, mode, action, username, cfg = argv
-		user = User(username, getPass(username))
+		user = User(username, get_pass(username))
 		return [mode, action, user, cfg]
 
 def getUser():
@@ -40,7 +40,7 @@ def getUser():
 		return getAlias(choice)
 	user = input("User: ")
 	passwd = inputPass("Password: ")
-	newUser(user, passwd)
+	new_user(user, passwd)
 	return user
 
 def filterList(array: list[str], string: str):
@@ -62,7 +62,7 @@ def getOptions():
 	mode = pick(["config", "loadout"])
 	action = pick(["backup", "dump", "import", "restore"])
 	username = getUser()
-	user = User(username, getPass(username))
+	user = User(username, get_pass(username))
 	if (action in ["restore", "backup"]):
 		return [mode, action, user, ""]
 	if (mode == "config"):

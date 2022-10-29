@@ -1,10 +1,10 @@
-from ValVault import getAuth, Auth, User
+from ValVault import get_auth, Auth, User
 
 from .storage import *
 from .api import *
 
 def config(action, user: User, cfg):
-	auth: Auth = getAuth(user)
+	auth: Auth = get_auth(user)
 	if (action == "dump"):
 		saveToFile(cfg, auth)
 	elif (action == "import"):

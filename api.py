@@ -1,17 +1,17 @@
 import requests
 import json
-from ValVault import makeHeaders
+from ValVault import make_headers
 
 from .structs import Auth, AuthLoadout
 from .parsing import *
 
 def getAPI(url, auth: Auth):
-	r = requests.get(url, headers=makeHeaders(auth))
+	r = requests.get(url, headers=make_headers(auth))
 	jsonData = json.loads(r.text)
 	return jsonData
 
 def putAPI(url, auth: Auth, data):
-	req = requests.put(url, headers=makeHeaders(auth), json=data)
+	req = requests.put(url, headers=make_headers(auth), json=data)
 	return req
 
 def getPreference(auth: Auth):

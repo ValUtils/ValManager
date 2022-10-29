@@ -1,11 +1,11 @@
-from ValVault import getAuth, User
+from ValVault import get_auth, User
 
 from .structs import AuthLoadout
 from .storage import *
 from .api import *
 
 def loadout(action, user: User, cfg):
-	auth = getAuth(user)
+	auth = get_auth(user)
 	region = getRegion(auth)
 	loadAuth = AuthLoadout(user.username, region, auth)
 

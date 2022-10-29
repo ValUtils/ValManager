@@ -1,5 +1,5 @@
 from bidict import bidict
-from ValVault import getUsers
+from ValVault import get_users
 
 from .storage import *
 
@@ -19,7 +19,7 @@ def getAlias(alias):
 
 def getAliased():
 	aliases = aliasRead()
-	dbUsers = getUsers()
+	dbUsers = get_users()
 	users = []
 
 	for user in dbUsers:
