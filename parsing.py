@@ -11,18 +11,18 @@ def encode( string_val ):
 	compressed_string = zlibbed_str[2:-4]
 	return base64.b64encode( compressed_string )
 
-def toData( b64string ):
+def to_data( b64string ):
 	inflated_data = decode(b64string)
 	return json.loads(inflated_data)
 
-def toMagic( data ):
+def to_magic( data ):
 	stringify = json.dumps(data).encode("utf-8")
 	return encode(stringify).decode("utf-8")
 
-def encodeJSON( data ):
+def encode_json( data ):
 	str = json.dumps(data).encode("utf-8")
 	return base64.b64encode(str).decode("utf-8")
 
-def decodeJSON( data ):
+def decode_json( data ):
 	str = base64.b64decode(data.encode("utf-8"))
 	return json.loads(str)

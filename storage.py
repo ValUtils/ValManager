@@ -3,49 +3,49 @@ import json
 from pathlib import Path
 from os import getenv
 
-def saveToDrive(data, file):
+def save_to_drive(data, file):
 	f = open(file, "w")
 	f.write(data)
 	f.close()
 
-def readFromDrive(file):
+def read_from_drive(file):
 	f = open(file, "r")
 	data = f.read()
 	f.close()
 	return data
 
-def jsonWrite(data, file):
+def json_write(data, file):
 	jsonData = json.dumps(data,indent=4)
-	saveToDrive(jsonData, file)
+	save_to_drive(jsonData, file)
 
-def jsonRead(file):
-	rawData = readFromDrive(file)
+def json_read(file):
+	rawData = read_from_drive(file)
 	data = json.loads(rawData)
 	return data
 
-def listDir(dir: Path):
-	createPath(dir)
+def list_dir(dir: Path):
+	create_path(dir)
 	files = [f.name for f in dir.iterdir() if f.is_file()]
 	return files
 
-def createPath(path: Path):
+def create_path(path: Path):
 	if(path.is_dir()):
 		return
 	path.mkdir()
 
-def setPath():
+def set_path():
 	global settingsPath
 	if (platform.system() == "Windows"):
 		appdata = Path(getenv('APPDATA'))
 		settingsPath = appdata / "ValConfig"
-		createPath(settingsPath)
+		create_path(settingsPath)
 	elif (platform.system() == "Linux"):
 		home = Path(getenv('HOME'))
 		settingsPath = home / ".ValConfig"
-		createPath(settingsPath)
+		create_path(settingsPath)
 	if (settingsPath):
 		folders = ["configs", "loadouts"]
 		for f in folders:
-			createPath(settingsPath / f)
+			create_path(settingsPath / f)
 
-setPath()
+set_path()

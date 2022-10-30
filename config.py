@@ -6,31 +6,31 @@ from .api import *
 def config(action, user: User, cfg):
 	auth: Auth = get_auth(user)
 	if (action == "dump"):
-		saveToFile(cfg, auth)
+		save_to_file(cfg, auth)
 	elif (action == "import"):
-		saveToFile(f'{user.username}.bck.json', auth)
-		importFromFile(cfg, auth)
+		save_to_file(f'{user.username}.bck.json', auth)
+		import_from_file(cfg, auth)
 	elif (action == "restore"):
-		importFromFile(f'{user.username}.bck.json', auth)
+		import_from_file(f'{user.username}.bck.json', auth)
 	elif (action == "backup"):
-		saveToFile(f'{user.username}.bck.json', auth)
+		save_to_file(f'{user.username}.bck.json', auth)
 
-def configWrite(data,file):
-	jsonWrite(data, settingsPath / "configs" / file)
+def config_write(data,file):
+	json_write(data, settingsPath / "configs" / file)
 
-def configRead(file):
-	return jsonRead(settingsPath / "configs" / file)
+def config_read(file):
+	return json_read(settingsPath / "configs" / file)
 
-def configList():
-	files = listDir(settingsPath / "configs")
+def config_list():
+	files = list_dir(settingsPath / "configs")
 	files.sort(key=lambda f: "bck.json" in f)
 	return files
 
-def importFromFile(cfg, auth):
-	data = configRead(cfg)
-	req = setPreference(auth, data)
+def import_from_file(cfg, auth):
+	data = config_read(cfg)
+	req = set_preference(auth, data)
 	print(f'Config status code: {req.status_code}')
 
-def saveToFile(cfg, auth):
-	data = getPreference(auth)
-	configWrite(data, cfg)
+def save_to_file(cfg, auth):
+	data = get_preference(auth)
+	config_write(data, cfg)

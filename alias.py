@@ -3,22 +3,22 @@ from ValVault import get_users
 
 from .storage import *
 
-def aliasWrite(data):
-	jsonWrite(data, settingsPath / "alias.json")
+def alias_write(data):
+	json_write(data, settingsPath / "alias.json")
 
-def aliasRead():
-	data = jsonRead(settingsPath / "alias.json")
+def alias_read():
+	data = json_read(settingsPath / "alias.json")
 	biData = bidict(data)
 	return biData
 
-def getAlias(alias):
-	aliases = aliasRead()
+def get_alias(alias):
+	aliases = alias_read()
 	if (alias in aliases):
 		return aliases[alias]
 	return alias
 
-def getAliased():
-	aliases = aliasRead()
+def get_aliased():
+	aliases = alias_read()
 	dbUsers = get_users()
 	users = []
 

@@ -6,35 +6,35 @@ from .api import *
 
 def loadout(action, user: User, cfg):
 	auth = get_auth(user)
-	region = getRegion(auth)
+	region = get_region(auth)
 	loadAuth = AuthLoadout(user.username, region, auth)
 
 	if (action == "dump"):
-		saveToFile(cfg, loadAuth)
+		save_to_file(cfg, loadAuth)
 	elif (action == "import"):
-		saveToFile("backup.json", loadAuth)
-		importFromFile(cfg, loadAuth)
+		save_to_file("backup.json", loadAuth)
+		import_from_file(cfg, loadAuth)
 	elif (action == "restore"):
-		importFromFile("backup.json", loadAuth)
-		setLoadOut(loadAuth, loadRead("backup.json", user.username))
+		import_from_file("backup.json", loadAuth)
+		set_load_out(loadAuth, load_read("backup.json", user.username))
 	elif (action == "backup"):
-		saveToFile("backup.json", loadAuth)
+		save_to_file("backup.json", loadAuth)
 
-def loadWrite(data, file, sub):
-	createPath(settingsPath / "loadouts" / sub)
-	jsonWrite(data, settingsPath / "loadouts" / sub / file)
+def load_write(data, file, sub):
+	create_path(settingsPath / "loadouts" / sub)
+	json_write(data, settingsPath / "loadouts" / sub / file)
 
-def loadRead(file, sub):
-	return jsonRead(settingsPath / "loadouts" / sub / file)
+def load_read(file, sub):
+	return json_read(settingsPath / "loadouts" / sub / file)
 
-def loadList(sub):
-	return listDir(settingsPath / "loadouts" / sub)
+def load_list(sub):
+	return list_dir(settingsPath / "loadouts" / sub)
 
-def importFromFile(cfg, loadAuth: AuthLoadout):
-	data = loadRead(cfg, loadAuth.username)
-	req = setLoadOut(loadAuth, data)
+def import_from_file(cfg, loadAuth: AuthLoadout):
+	data = load_read(cfg, loadAuth.username)
+	req = set_load_out(loadAuth, data)
 	print(f'Loadout status code: {req.status_code}')
 
-def saveToFile(cfg, loadAuth: AuthLoadout):
-	data = getLoadOut(loadAuth)
-	loadWrite(data, cfg, loadAuth.username)
+def save_to_file(cfg, loadAuth: AuthLoadout):
+	data = get_load_out(loadAuth)
+	load_write(data, cfg, loadAuth.username)

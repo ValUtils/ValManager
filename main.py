@@ -9,9 +9,9 @@ from ValVault import (
 )
 
 from .storage import *
-from .loadout import loadout, loadList
-from .config import config, configList
-from .alias import getAliased, getAlias
+from .loadout import loadout, load_list
+from .config import config, config_list
+from .alias import get_aliased, get_alias
 
 def pick(options):
 	return pickFunc(options)[0]
@@ -26,47 +26,47 @@ def main():
 
 def menu():
 	if (len(argv) == 1):
-		return getOptions()
+		return get_options()
 	if (len(argv) == 5):
 		s, mode, action, username, cfg = argv
 		user = User(username, get_pass(username))
 		return [mode, action, user, cfg]
 
-def getUser():
-	users = getAliased()
+def get_user():
+	users = get_aliased()
 	users.append("New...")
 	choice = pick(users)
 	if (choice != "New..."):
-		return getAlias(choice)
+		return get_alias(choice)
 	user = input("User: ")
 	passwd = inputPass("Password: ")
 	new_user(user, passwd)
 	return user
 
-def filterList(array: list[str], string: str):
+def filter_list(array: list[str], string: str):
 	filteredList = [s for s in array if string not in s]
 	array.clear()
 	array.extend(filteredList)
 
-def chooseFile(fileList, dump):
+def choose_file(fileList, dump):
 	if (dump):
 		fileList.append("New...")
-		filterList(fileList, "backup.json")
-		filterList(fileList, ".bck.json")
+		filter_list(fileList, "backup.json")
+		filter_list(fileList, ".bck.json")
 	choice = pick(fileList)
 	if (choice == "New..."):
 		return input("Filename: ")
 	return choice
 
-def getOptions():
+def get_options():
 	mode = pick(["config", "loadout"])
 	action = pick(["backup", "dump", "import", "restore"])
-	username = getUser()
+	username = get_user()
 	user = User(username, get_pass(username))
 	if (action in ["restore", "backup"]):
 		return [mode, action, user, ""]
 	if (mode == "config"):
-		cfg = chooseFile(configList(), action == "dump")
+		cfg = choose_file(config_list(), action == "dump")
 	elif (mode == "loadout"):
-		cfg = chooseFile(loadList(username), action == "dump")
+		cfg = choose_file(load_list(username), action == "dump")
 	return [mode, action, user, cfg]
