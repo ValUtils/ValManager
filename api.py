@@ -19,13 +19,13 @@ def get_preference(auth: Auth):
 	jsonData = get_api(apiURL, auth)
 	if ("data" not in jsonData):
 		return {}
-	data = to_data(jsonData["data"])
+	data = zloads(jsonData["data"])
 	return data
 
 def set_preference(auth: Auth, data):
 	rawData = {
 		"type": "Ares.PlayerSettings",
-		"data": to_magic(data)
+		"data": zdumps(data)
 	}
 	apiURL = 'https://playerpreferences.riotgames.com/playerPref/v3/savePreference'
 	req = put_api(apiURL, auth, rawData)
