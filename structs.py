@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from ValVault import Auth
+from ValLib import Auth
 
 @dataclass
 class AuthLoadout():

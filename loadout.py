@@ -1,8 +1,8 @@
 from ValVault import get_auth, User
+from ValLib.api import *
 
 from .structs import AuthLoadout
 from .storage import *
-from .api import *
 
 def loadout(action, user: User, cfg):
 	auth = get_auth(user)

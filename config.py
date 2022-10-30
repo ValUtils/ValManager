@@ -1,7 +1,8 @@
-from ValVault import get_auth, Auth, User
+from ValLib import Auth, User
+from ValLib.api import *
+from ValVault import get_auth
 
 from .storage import *
-from .api import *
 
 def config(action, user: User, cfg):
 	auth: Auth = get_auth(user)
