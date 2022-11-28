@@ -3,6 +3,8 @@ from getpass import getpass as inputPass
 from sys import argv
 from ValVault import (
 	init as init_auth,
+	get_aliases,
+	get_name,
 	get_pass,
 	new_user,
 	User
@@ -11,7 +13,6 @@ from ValVault import (
 from .storage import *
 from .loadout import loadout, load_list
 from .config import config, config_list
-from .alias import get_aliased, get_alias
 
 def pick(options):
 	return pickFunc(options)[0]
@@ -33,11 +34,11 @@ def menu():
 		return [mode, action, user, cfg]
 
 def get_user():
-	users = get_aliased()
+	users = get_aliases()
 	users.append("New...")
 	choice = pick(users)
 	if (choice != "New..."):
-		return get_alias(choice)
+		return get_name(choice)
 	user = input("User: ")
 	passwd = inputPass("Password: ")
 	new_user(user, passwd)
