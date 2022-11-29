@@ -2,7 +2,7 @@ from pick import pick as pickFunc
 from getpass import getpass as inputPass
 from sys import argv
 from ValVault import (
-	init as init_auth,
+	init_vault,
 	get_aliases,
 	get_name,
 	get_pass,
@@ -18,7 +18,7 @@ def pick(options):
 	return pickFunc(options)[0]
 
 def main():
-	init_auth()
+	init_vault()
 	mode, action, user, cfg = menu()
 	if (mode == "config"):
 		config(action, user, cfg)
