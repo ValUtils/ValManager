@@ -1,13 +1,7 @@
 from pick import pick as pickFunc
 from getpass import getpass as inputPass
-from sys import argv
-from ValVault import (
-	get_aliases,
-	get_name,
-	get_pass,
-	new_user,
-	User
-)
+from argparse import ArgumentParser
+from ValVault import get_aliases, get_name, new_user
 
 from .loadout import load_list
 from .config import config_list
@@ -16,12 +10,23 @@ def pick(options):
 	return pickFunc(options)[0]
 
 def menu():
-	if (len(argv) == 1):
-		return get_options()
-	if (len(argv) == 5):
-		s, mode, action, username, cfg = argv
-		user = User(username, get_pass(username))
-		return [mode, action, user, cfg]
+	args = get_args()
+	return fill_args(args)
+
+def get_args():
+	parser = ArgumentParser("valconfig", description="Save your Valorant configurations and loadouts")
+	parser.add_argument("-u", "--user", )
+	parser.add_argument("-m", "--mode", choices=["config", "loadout"])
+	parser.add_argument("-a", "--action", choices=["dump","import", "backup", "restore"])
+	parser.add_argument("-c", "--config")
+	return parser.parse_args()
+
+def fill_args(args):
+	args.mode = args.mode or pick(["config", "loadout"])
+	args.action = args.action or pick(["backup", "dump", "import", "restore"])
+	args.user = args.user or get_user()
+	args.config = args.config or choose_config(args.mode, args.action, args.user)
+	return [args.mode, args.action, args.user, args.config]
 
 def get_user():
 	users = get_aliases()
@@ -49,15 +54,11 @@ def choose_file(fileList, dump):
 		return input("Filename: ")
 	return choice
 
-def get_options():
-	mode = pick(["config", "loadout"])
-	action = pick(["backup", "dump", "import", "restore"])
-	username = get_user()
-	user = User(username, get_pass(username))
-	if (action in ["restore", "backup"]):
-		return [mode, action, user, ""]
+def choose_config(mode, action, username):
+	if (action not in ["dump", "import"]):
+		return
+	dump = action == "dump"
 	if (mode == "config"):
-		cfg = choose_file(config_list(), action == "dump")
-	elif (mode == "loadout"):
-		cfg = choose_file(load_list(username), action == "dump")
-	return [mode, action, user, cfg]
+		return choose_file(config_list(), dump)
+	if (mode == "loadout"):
+		return choose_file(load_list(username), dump)
