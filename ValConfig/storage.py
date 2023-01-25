@@ -1,9 +1,11 @@
-from ValLib.storage import * 
+from ValLib.storage import *
+
 
 def set_path():
-	global settingsPath
-	utilsPath = utils_path()
-	settingsPath = utilsPath / "config"
-	create_path(settingsPath)
+    global settingsPath
+    utilsPath = utils_path()
+    settingsPath = utilsPath / "config"
+    create_path(settingsPath)
+
 
 set_path()
