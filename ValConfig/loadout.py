@@ -1,7 +1,7 @@
 from ValVault import get_auth, User
 from ValLib.api import *
+from ValLib.structs import AuthLoadout
 
-from .structs import AuthLoadout
 from .storage import *
 
 
