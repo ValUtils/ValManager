@@ -1,6 +1,6 @@
 from ValVault import get_auth, User
 from ValLib.api import get_region, get_load_out, set_load_out
-from ValLib.structs import AuthLoadout
+from ValLib.structs import ExtraAuth
 
 from .storage import *
 
@@ -8,7 +8,7 @@ from .storage import *
 def loadout(action, user: User, cfg):
     auth = get_auth(user)
     region = get_region(auth)
-    loadAuth = AuthLoadout(user.username, region, auth)
+    loadAuth = ExtraAuth(user.username, region, auth)
 
     if (action == "dump"):
         save_to_file(cfg, loadAuth)
@@ -35,12 +35,12 @@ def load_list(sub):
     return list_dir(settingsPath / "loadouts" / sub)
 
 
-def import_from_file(cfg, loadAuth: AuthLoadout):
+def import_from_file(cfg, loadAuth: ExtraAuth):
     data = load_read(cfg, loadAuth.username)
     req = set_load_out(loadAuth, data)
     print(f'Loadout status code: {req.status_code}')
 
 
-def save_to_file(cfg, loadAuth: AuthLoadout):
+def save_to_file(cfg, loadAuth: ExtraAuth):
     data = get_load_out(loadAuth)
     load_write(data, cfg, loadAuth.username)
