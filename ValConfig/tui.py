@@ -1,3 +1,4 @@
+from .backup import backup_list
 from pick import pick as pickFunc
 from getpass import getpass as inputPass
 from argparse import ArgumentParser
@@ -31,7 +32,7 @@ def fill_args(args):
     args.mode = args.mode or pick(["config", "loadout"])
     args.action = args.action or pick(["backup", "dump", "import", "restore"])
     args.user = args.user or get_user()
-    args.config = args.config or choose_config(
+    args.config = args.config or pick_data_file(
         args.mode, args.action, args.user)
     return [args.mode, args.action, args.user, args.config]
 
@@ -54,8 +55,8 @@ def filter_list(array: list[str], string: str):
     array.extend(filteredList)
 
 
-def choose_file(fileList, dump):
-    if (dump):
+def choose_file(fileList, action):
+    if (action == "dump"):
         fileList.append("New...")
         filter_list(fileList, "backup.json")
         filter_list(fileList, ".bck.json")
@@ -65,11 +66,16 @@ def choose_file(fileList, dump):
     return choice
 
 
-def choose_config(mode, action, username):
-    if (action not in ["dump", "import"]):
+def pick_config(action, username):
+    if (action == "restore"):
+        return pickFunc(backup_list(username))[1]
+    return choose_file(config_list(), action)
+
+
+def pick_data_file(mode, action, username):
+    if (action not in ["dump", "import", "restore"]):
         return
-    dump = action == "dump"
-    if (mode == "config"):
-        return choose_file(config_list(), dump)
     if (mode == "loadout"):
-        return choose_file(load_list(username), dump)
+        return choose_file(load_list(username), action)
+    if (mode == "config"):
+        return pick_config(action, username)

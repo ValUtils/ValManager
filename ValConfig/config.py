@@ -1,3 +1,4 @@
+from .backup import backup_settings, get_backup
 from ValLib import Auth, User
 from ValLib.api import get_preference, set_preference
 from ValVault import get_auth
@@ -10,12 +11,12 @@ def config(action, user: User, cfg):
     if (action == "dump"):
         save_to_file(cfg, auth)
     elif (action == "import"):
-        save_to_file(f'{user.username}.bck.json', auth)
+        backup(user, auth)
         import_from_file(cfg, auth)
     elif (action == "restore"):
-        import_from_file(f'{user.username}.bck.json', auth)
+        restore(user, auth, cfg)
     elif (action == "backup"):
-        save_to_file(f'{user.username}.bck.json', auth)
+        backup(user, auth)
 
 
 def config_write(data, file):
@@ -41,3 +42,13 @@ def import_from_file(cfg, auth):
 def save_to_file(cfg, auth):
     data = get_preference(auth)
     config_write(data, cfg)
+
+
+def backup(user: User, auth: Auth):
+    data = get_preference(auth)
+    backup_settings(user.username, data)
+
+
+def restore(user: User, auth: Auth, cfg):
+    data = get_backup(user.username, cfg)
+    set_preference(auth, data)
