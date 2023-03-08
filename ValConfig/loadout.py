@@ -13,13 +13,12 @@ def loadout(action, user: User, cfg):
     if (action == "dump"):
         save_to_file(cfg, loadAuth)
     elif (action == "import"):
-        save_to_file("backup.json", loadAuth)
+        backup(loadAuth)
         import_from_file(cfg, loadAuth)
     elif (action == "restore"):
-        import_from_file("backup.json", loadAuth)
-        set_load_out(loadAuth, load_read("backup.json", user.username))
+        restore(loadAuth)
     elif (action == "backup"):
-        save_to_file("backup.json", loadAuth)
+        backup(loadAuth)
 
 
 def load_write(data, file, sub):
@@ -44,3 +43,21 @@ def import_from_file(cfg, loadAuth: ExtraAuth):
 def save_to_file(cfg, loadAuth: ExtraAuth):
     data = get_load_out(loadAuth)
     load_write(data, cfg, loadAuth.username)
+
+
+def backup_file(loadAuth: ExtraAuth):
+    file_name = f"{loadAuth.username}.json"
+    backup_folder = settingsPath / "backup" / "_loadouts"
+    return backup_folder / file_name
+
+
+def backup(loadAuth: ExtraAuth):
+    data = get_load_out(loadAuth)
+    backup_path = backup_file(loadAuth)
+    json_write(data, backup_path)
+
+
+def restore(loadAuth: ExtraAuth):
+    backup_path = backup_file(loadAuth)
+    data = json_read(backup_path)
+    set_load_out(loadAuth, data)
