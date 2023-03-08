@@ -49,17 +49,9 @@ def get_user():
     return user
 
 
-def filter_list(array: list[str], string: str):
-    filteredList = [s for s in array if string not in s]
-    array.clear()
-    array.extend(filteredList)
-
-
 def choose_file(fileList, action):
     if (action == "dump"):
         fileList.append("New...")
-        filter_list(fileList, "backup.json")
-        filter_list(fileList, ".bck.json")
     choice = pick(fileList)
     if (choice == "New..."):
         return input("Filename: ")
