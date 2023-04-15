@@ -41,7 +41,7 @@ def get_user():
     users = get_aliases()
     users.append("New...")
     choice = pick(users)
-    if (choice != "New..."):
+    if choice != "New...":
         return get_name(choice)
     user = input("User: ")
     passwd = inputPass("Password: ")
@@ -50,24 +50,24 @@ def get_user():
 
 
 def choose_file(fileList, action):
-    if (action == "dump"):
+    if action == "dump":
         fileList.append("New...")
     choice = pick(fileList)
-    if (choice == "New..."):
+    if choice == "New...":
         return input("Filename: ")
     return choice
 
 
 def pick_config(action, username):
-    if (action == "restore"):
+    if action == "restore":
         return pickFunc(backup_list(username))[1]
     return choose_file(config_list(), action)
 
 
 def pick_data_file(mode, action, username):
-    if (action not in ["dump", "import", "restore"]):
+    if action not in ["dump", "import", "restore"]:
         return
-    if (mode == "loadout"):
+    if mode == "loadout":
         return choose_file(load_list(username), action)
-    if (mode == "config"):
+    if mode == "config":
         return pick_config(action, username)

@@ -8,14 +8,14 @@ from .storage import *
 
 def config(action, user: User, cfg):
     auth: Auth = get_auth(user)
-    if (action == "dump"):
+    if action == "dump":
         save_to_file(cfg, auth)
-    elif (action == "import"):
+    elif action == "import":
         backup(user, auth)
         import_from_file(cfg, auth)
-    elif (action == "restore"):
+    elif action == "restore":
         restore(user, auth, cfg)
-    elif (action == "backup"):
+    elif action == "backup":
         backup(user, auth)
 
 

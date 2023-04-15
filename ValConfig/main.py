@@ -9,7 +9,7 @@ def main():
     init_vault()
     mode, action, username, cfg = menu()
     user = User(username, get_pass(username))
-    if (mode == "config"):
+    if mode == "config":
         config(action, user, cfg)
-    elif (mode == "loadout"):
+    elif mode == "loadout":
         loadout(action, user, cfg)

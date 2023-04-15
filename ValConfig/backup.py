@@ -28,7 +28,7 @@ def get_enum_index(enum: str, settings: list):
 
 def load_key(enum: str, strSettings: list):
     index = get_enum_index(enum, strSettings)
-    if (index == -1):
+    if index == -1:
         return
     setting = strSettings[index]
     setting["value"] = json.loads(setting["value"])
@@ -36,14 +36,14 @@ def load_key(enum: str, strSettings: list):
 
 def dump_key(enum: str, strSettings: list):
     index = get_enum_index(enum, strSettings)
-    if (index == -1):
+    if index == -1:
         return
     setting = strSettings[index]
     setting["value"] = json.dumps(setting["value"])
 
 
 def to_raw_config(config: Dict[str, Any]):
-    if ("stringSettings" not in config):
+    if "stringSettings" not in config:
         return config
     strSettings = config["stringSettings"]
     for key in json_keys:
@@ -52,7 +52,7 @@ def to_raw_config(config: Dict[str, Any]):
 
 
 def from_raw_config(config: Dict[str, Any]):
-    if ("stringSettings" not in config):
+    if "stringSettings" not in config:
         return config
     strSettings = config["stringSettings"]
     for key in json_keys:
@@ -86,17 +86,17 @@ def new_backup(path: Path, file: BackupFile, info: BackupInfo, config):
 def create_backup(info: BackupInfo, config, user_path: Path):
     backup_path = user_path / f"{info.backupNumber}.json"
     file = get_settings(BackupFile, backup_path)
-    if (file.creationDate == 0):
+    if file.creationDate == 0:
         new_backup(backup_path, file, info, config)
         return
     settings = build_backup(file.settings, file.patches)
     settings_diff = list(diff(settings, config))
-    if (len(settings_diff) == 0):
+    if len(settings_diff) == 0:
         return
     file.patches.append(settings_diff)
     kilobyte = 1000
     size_patches = asizeof(file.patches)
-    if (size_patches > 5 * kilobyte):
+    if size_patches > 5 * kilobyte:
         info.backupNumber += 1
         new_path = backup_path.with_stem(str(info.backupNumber))
         new_backup(new_path, BackupFile(), info, config)
@@ -134,7 +134,7 @@ def get_backup(user, index):
     backup = info.backups[index]
     path = user_path / f"{backup.file}.json"
     file = get_settings(BackupFile, path)
-    if (backup.patchIndex == -1):
+    if backup.patchIndex == -1:
         return to_raw_config(file.settings)
     patches = file.patches[:backup.patchIndex + 1]
     settings = build_backup(file.settings, patches)

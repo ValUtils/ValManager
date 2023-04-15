@@ -10,14 +10,14 @@ def loadout(action, user: User, cfg):
     region = get_region(auth)
     loadAuth = ExtraAuth(user.username, region, auth)
 
-    if (action == "dump"):
+    if action == "dump":
         save_to_file(cfg, loadAuth)
-    elif (action == "import"):
+    elif action == "import":
         backup(loadAuth)
         import_from_file(cfg, loadAuth)
-    elif (action == "restore"):
+    elif action == "restore":
         restore(loadAuth)
-    elif (action == "backup"):
+    elif action == "backup":
         backup(loadAuth)
 
 
