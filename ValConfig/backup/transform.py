@@ -63,11 +63,15 @@ def loadify(config):
 
 def magicify(config: Dict[str, Any]):
     for value_type in settings_name.keys():
+        if value_type not in config:
+            continue
         config[value_type] = dictify(config[value_type])
 
 
 def demagicify(config: Dict[str, Any]):
     for value_type in settings_name.keys():
+        if value_type not in config:
+            continue
         config[value_type] = undictify(config[value_type], value_type)
 
 
