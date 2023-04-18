@@ -7,8 +7,8 @@ from dictdiffer import diff, patch
 from pympler.asizeof import asizeof
 from ValStorage import get_settings, save_to_drive
 
-from .structs import BackupData, BackupFile, BackupInfo
-from .storage import json_read, json_write, create_path, settingsPath
+from ..structs import BackupData, BackupFile, BackupInfo
+from ..storage import json_read, json_write, create_path, settingsPath
 
 json_keys = ["SavedCrosshairProfileData", "MutedWords"]
 

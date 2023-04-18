@@ -1,9 +1,9 @@
-from .backup import backup_settings, get_backup
 from ValLib import Auth, User
 from ValLib.api import get_preference, set_preference
 from ValVault import get_auth
 
 from .storage import *
+from .backup import backup_settings, get_backup
 
 
 def config(action, user: User, cfg):
