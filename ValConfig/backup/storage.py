@@ -21,8 +21,8 @@ def save_backup(file: BackupFile, path: Path):
 
 
 def get_info(sub: str):
-    path = settingsPath / sub / "info.json"
-    path.mkdir(exist_ok=True)
+    path = backupPath / sub / "info.json"
+    path.parent.mkdir(exist_ok=True)
     return get_settings(BackupInfo, path)
 
 
