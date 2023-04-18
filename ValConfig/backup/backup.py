@@ -1,67 +1,14 @@
-import json
 from pathlib import Path
 from time import time
-from typing import Any, Dict
 from datetime import datetime
 from dictdiffer import diff, patch
 from pympler.asizeof import asizeof
-from ValStorage import get_settings, save_to_drive
+from ValStorage import get_settings
 
 from ..structs import BackupData, BackupFile, BackupInfo
-from ..storage import json_read, json_write, create_path, settingsPath
-
-json_keys = ["SavedCrosshairProfileData", "MutedWords"]
-
-
-def backup_write(data, file, sub):
-    create_path(settingsPath / "backup" / sub)
-    json_write(data, settingsPath / "backup" / sub / file)
-
-
-def backup_read(file, sub):
-    return json_read(settingsPath / "backup" / sub / file)
-
-
-def get_enum_index(enum: str, settings: list):
-    return next((settings.index(x) for x in settings if enum in x["settingEnum"]), -1)
-
-
-def load_key(enum: str, strSettings: list):
-    index = get_enum_index(enum, strSettings)
-    if index == -1:
-        return
-    setting = strSettings[index]
-    setting["value"] = json.loads(setting["value"])
-
-
-def dump_key(enum: str, strSettings: list):
-    index = get_enum_index(enum, strSettings)
-    if index == -1:
-        return
-    setting = strSettings[index]
-    setting["value"] = json.dumps(setting["value"])
-
-
-def to_raw_config(config: Dict[str, Any]):
-    if "stringSettings" not in config:
-        return config
-    strSettings = config["stringSettings"]
-    for key in json_keys:
-        dump_key(key, strSettings)
-    return config
-
-
-def from_raw_config(config: Dict[str, Any]):
-    if "stringSettings" not in config:
-        return config
-    strSettings = config["stringSettings"]
-    for key in json_keys:
-        load_key(key, strSettings)
-    return config
-
-
-def save_backup(file: BackupFile, path: Path):
-    save_to_drive(file.to_json(), path)
+from ..storage import json_write, create_path, settingsPath
+from .transform import from_raw_config, to_raw_config
+from .storage import save_backup
 
 
 def build_backup(settings, patches):
