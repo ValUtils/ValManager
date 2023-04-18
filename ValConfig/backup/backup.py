@@ -6,7 +6,6 @@ from pympler.asizeof import asizeof
 from ValStorage import get_settings
 
 from ..structs import BackupData, BackupFile, BackupInfo
-from ..storage import json_write, create_path, settingsPath
 from .transform import from_raw_config, to_raw_config
 from .storage import get_info, save_backup, save_info, backupPath
 
