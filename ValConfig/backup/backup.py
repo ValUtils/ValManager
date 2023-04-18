@@ -8,7 +8,7 @@ from ValStorage import get_settings
 from ..structs import BackupData, BackupFile, BackupInfo
 from ..storage import json_write, create_path, settingsPath
 from .transform import from_raw_config, to_raw_config
-from .storage import save_backup
+from .storage import get_info, save_backup, save_info, backupPath
 
 
 def build_backup(settings, patches):
@@ -30,8 +30,8 @@ def new_backup(path: Path, file: BackupFile, info: BackupInfo, config):
     save_backup(file, path)
 
 
-def create_backup(info: BackupInfo, config, user_path: Path):
-    backup_path = user_path / f"{info.backupNumber}.json"
+def create_backup(info: BackupInfo, config, user: str):
+    backup_path = backupPath / user / f"{info.backupNumber}.json"
     file = get_settings(BackupFile, backup_path)
     if file.creationDate == 0:
         new_backup(backup_path, file, info, config)
@@ -55,12 +55,10 @@ def create_backup(info: BackupInfo, config, user_path: Path):
 
 def backup_settings(user, config):
     preferences = from_raw_config(config)
-    user_path = settingsPath / "backup" / user
-    create_path(user_path)
-    info = get_settings(BackupInfo, user_path / "info.json")
+    info = get_info(user)
     info.lastBackup = time()
-    create_backup(info, preferences, user_path)
-    json_write(info.to_dict(), user_path / "info.json")
+    create_backup(info, preferences, user)
+    save_info(user, info)
 
 
 def to_date(timestamp: float):
@@ -68,18 +66,14 @@ def to_date(timestamp: float):
 
 
 def backup_list(user):
-    user_path = settingsPath / "backup" / user
-    create_path(user_path)
-    info = get_settings(BackupInfo, user_path / "info.json")
+    info = get_info(user)
     return [to_date(x.timestamp) for x in info.backups]
 
 
 def get_backup(user, index):
-    user_path = settingsPath / "backup" / user
-    create_path(user_path)
-    info = get_settings(BackupInfo, user_path / "info.json")
+    info = get_info(user)
     backup = info.backups[index]
-    path = user_path / f"{backup.file}.json"
+    path = backupPath / user / f"{backup.file}.json"
     file = get_settings(BackupFile, path)
     if backup.patchIndex == -1:
         return to_raw_config(file.settings)
