@@ -1,4 +1,4 @@
-from ValVault import get_auth, User
+from ValVault.terminal import get_auth, User
 from ValLib.api import get_region, get_load_out, set_load_out
 from ValLib.structs import ExtraAuth
 

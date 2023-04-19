@@ -1,4 +1,4 @@
-from ValVault import User, init_vault, get_pass
+from ValVault.terminal import User, init_vault, get_pass
 
 from .loadout import loadout
 from .config import config

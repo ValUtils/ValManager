@@ -1,7 +1,7 @@
 from pick import pick as pickFunc
 from getpass import getpass as inputPass
 from argparse import ArgumentParser
-from ValVault import get_aliases, get_name, new_user
+from ValVault.terminal import get_aliases, get_name, new_user
 
 from .loadout import load_list
 from .config import config_list
