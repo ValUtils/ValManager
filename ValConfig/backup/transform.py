@@ -32,6 +32,8 @@ def dump_key(enum: str, strSettings: list):
 
 
 def from_raw_config(config: Dict[str, Any]):
+    if not config:
+        return {}
     loadify(config)
     magicify(config)
     return config
