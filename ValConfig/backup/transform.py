@@ -1,5 +1,4 @@
 import json
-
 from typing import Any, Dict, List
 
 json_keys = ["SavedCrosshairProfileData", "MutedWords"]

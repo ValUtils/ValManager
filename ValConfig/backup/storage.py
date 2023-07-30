@@ -1,8 +1,9 @@
 from pathlib import Path
-from ValStorage import save_to_drive, get_settings
 
+from ValStorage import get_settings, save_to_drive
+
+from ..storage import create_path, json_read, json_write, settingsPath
 from ..structs import BackupFile, BackupInfo
-from ..storage import json_read, json_write, create_path, settingsPath
 
 backupPath = settingsPath / "backup"
 

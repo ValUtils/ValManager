@@ -1,6 +1,7 @@
+from dataclasses import dataclass, field
 from time import time
 from typing import Any, Dict, List
-from dataclasses import dataclass, field
+
 from dataclasses_json import DataClassJsonMixin
 
 

@@ -1,11 +1,13 @@
-from pick import pick as pickFunc
-from getpass import getpass as inputPass
 from argparse import ArgumentParser
+from getpass import getpass as inputPass
+
+from pick import pick as pickFunc
+
 from ValVault.terminal import get_aliases, get_name, new_user
 
-from .loadout import load_list
-from .config import config_list
 from .backup import backup_list
+from .config import config_list
+from .loadout import load_list
 
 
 def pick(options):

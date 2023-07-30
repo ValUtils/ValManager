@@ -1,7 +1,7 @@
-from ValVault.terminal import User, init_vault, get_pass
+from ValVault.terminal import User, get_pass, init_vault
 
-from .loadout import loadout
 from .config import config
+from .loadout import loadout
 from .tui import menu
 
 

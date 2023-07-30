@@ -1,6 +1,6 @@
-from ValVault.terminal import get_auth, User
-from ValLib.api import get_region, get_load_out, set_load_out
+from ValLib.api import get_load_out, get_region, set_load_out
 from ValLib.structs import ExtraAuth
+from ValVault.terminal import User, get_auth
 
 from .storage import *
 
