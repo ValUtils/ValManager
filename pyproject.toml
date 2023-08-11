@@ -19,7 +19,7 @@ Homepage = "https://github.com/ValUtils/ValConfig"
 [tool.bumpver]
 current_version = "0.0.1"
 version_pattern = "MAJOR.MINOR.PATCH"
-commit_message = "bump version {old_version} -> {new_version}"
+commit_message = "chore: version bump"
 commit = true
 tag = true
 push = true
