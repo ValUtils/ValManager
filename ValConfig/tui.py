@@ -5,9 +5,8 @@ from pick import pick as pickFunc
 
 from ValVault.terminal import get_aliases, get_name, new_user
 
+from . import config, loadout
 from .backup import backup_list
-from .config import config_list
-from .loadout import load_list
 
 
 def pick(options):
@@ -63,13 +62,13 @@ def choose_file(fileList, action):
 def pick_config(action, username):
     if action == "restore":
         return pickFunc(backup_list(username))[1]
-    return choose_file(config_list(), action)
+    return choose_file(config.list(), action)
 
 
 def pick_data_file(mode, action, username):
     if action not in ["dump", "import", "restore"]:
         return
     if mode == "loadout":
-        return choose_file(load_list(username), action)
+        return choose_file(loadout.list(username), action)
     if mode == "config":
         return pick_config(action, username)

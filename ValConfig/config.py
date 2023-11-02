@@ -6,42 +6,42 @@ from .storage import *
 from .backup import backup_settings, get_backup
 
 
-def config(action, user: User, cfg):
+def action(action, user: User, cfg):
     auth: Auth = get_auth(user)
     if action == "dump":
-        save_to_file(cfg, auth)
+        download(cfg, auth)
     elif action == "import":
         backup(user, auth)
-        import_from_file(cfg, auth)
+        upload(cfg, auth)
     elif action == "restore":
         restore(user, auth, cfg)
     elif action == "backup":
         backup(user, auth)
 
 
-def config_write(data, file):
+def write(data, file):
     json_write(data, settingsPath / "configs" / file)
 
 
-def config_read(file):
+def read(file):
     return json_read(settingsPath / "configs" / file)
 
 
-def config_list():
+def list():
     files = list_dir(settingsPath / "configs")
     files.sort(key=lambda f: "bck.json" in f)
     return files
 
 
-def import_from_file(cfg, auth):
-    data = config_read(cfg)
+def upload(cfg, auth):
+    data = read(cfg)
     req = set_preference(auth, data)
     print(f'Config status code: {req.status_code}')
 
 
-def save_to_file(cfg, auth):
+def download(cfg, auth):
     data = get_preference(auth)
-    config_write(data, cfg)
+    write(data, cfg)
 
 
 def backup(user: User, auth: Auth):
@@ -52,3 +52,6 @@ def backup(user: User, auth: Auth):
 def restore(user: User, auth: Auth, cfg):
     data = get_backup(user.username, cfg)
     set_preference(auth, data)
+
+
+__all__ = ["write", "read", "list", "upload", "download", "backup", "restore"]

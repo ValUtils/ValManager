@@ -1,7 +1,6 @@
 from ValVault.terminal import User, get_pass, init_vault
 
-from .config import config
-from .loadout import loadout
+from . import config, loadout
 from .tui import menu
 
 
@@ -10,6 +9,6 @@ def main():
     mode, action, username, cfg = menu()
     user = User(username, get_pass(username))
     if mode == "config":
-        config(action, user, cfg)
+        config.action(action, user, cfg)
     elif mode == "loadout":
-        loadout(action, user, cfg)
+        loadout.action(action, user, cfg)

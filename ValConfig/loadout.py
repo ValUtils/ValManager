@@ -5,44 +5,44 @@ from ValVault.terminal import User, get_auth
 from .storage import *
 
 
-def loadout(action, user: User, cfg):
+def action(action, user: User, cfg):
     auth = get_auth(user)
     region = get_region(auth)
     loadAuth = ExtraAuth(user.username, region, auth)
 
     if action == "dump":
-        save_to_file(cfg, loadAuth)
+        download(cfg, loadAuth)
     elif action == "import":
         backup(loadAuth)
-        import_from_file(cfg, loadAuth)
+        upload(cfg, loadAuth)
     elif action == "restore":
         restore(loadAuth)
     elif action == "backup":
         backup(loadAuth)
 
 
-def load_write(data, file, sub):
+def write(data, file, sub):
     create_path(settingsPath / "loadouts" / sub)
     json_write(data, settingsPath / "loadouts" / sub / file)
 
 
-def load_read(file, sub):
+def read(file, sub):
     return json_read(settingsPath / "loadouts" / sub / file)
 
 
-def load_list(sub):
+def list(sub):
     return list_dir(settingsPath / "loadouts" / sub)
 
 
-def import_from_file(cfg, loadAuth: ExtraAuth):
-    data = load_read(cfg, loadAuth.username)
+def upload(cfg, loadAuth: ExtraAuth):
+    data = read(cfg, loadAuth.username)
     req = set_load_out(loadAuth, data)
     print(f'Loadout status code: {req.status_code}')
 
 
-def save_to_file(cfg, loadAuth: ExtraAuth):
+def download(cfg, loadAuth: ExtraAuth):
     data = get_load_out(loadAuth)
-    load_write(data, cfg, loadAuth.username)
+    write(data, cfg, loadAuth.username)
 
 
 def backup_file(loadAuth: ExtraAuth):
@@ -61,3 +61,5 @@ def restore(loadAuth: ExtraAuth):
     backup_path = backup_file(loadAuth)
     data = json_read(backup_path)
     set_load_out(loadAuth, data)
+
+__all__ = ["write", "read", "list", "upload", "download", "backup", "restore"]
