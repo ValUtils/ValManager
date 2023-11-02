@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from time import time
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Literal
 
 from dataclasses_json import DataClassJsonMixin
 
@@ -25,3 +25,5 @@ class BackupFile(DataClassJsonMixin):
     creationDate: float = 0
     settings: Dict[str, Any] = field(default_factory=dict)
     patches: List[Any] = field(default_factory=list)
+
+Action = Literal["dump", "import", "restore", "backup"]

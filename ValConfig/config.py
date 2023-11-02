@@ -1,12 +1,16 @@
+from pathlib import Path
+from typing import Union
+
 from ValLib import Auth, User
 from ValLib.api import get_preference, set_preference
 from ValVault.terminal import get_auth
 
 from .storage import *
 from .backup import backup_settings, get_backup
+from .structs import Action
 
 
-def action(action, user: User, cfg):
+def action(action: Action, user: User, cfg):
     auth: Auth = get_auth(user)
     if action == "dump":
         download(cfg, auth)
@@ -19,11 +23,11 @@ def action(action, user: User, cfg):
         backup(user, auth)
 
 
-def write(data, file):
+def write(data, file: Union[str, Path]):
     json_write(data, settingsPath / "configs" / file)
 
 
-def read(file):
+def read(file: Union[str, Path]):
     return json_read(settingsPath / "configs" / file)
 
 
@@ -33,13 +37,13 @@ def list():
     return files
 
 
-def upload(cfg, auth):
+def upload(cfg: str, auth: Auth):
     data = read(cfg)
     req = set_preference(auth, data)
     print(f'Config status code: {req.status_code}')
 
 
-def download(cfg, auth):
+def download(cfg: str, auth: Auth):
     data = get_preference(auth)
     write(data, cfg)
 

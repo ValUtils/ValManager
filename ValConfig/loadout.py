@@ -1,11 +1,15 @@
+from pathlib import Path
+from typing import Union
+
 from ValLib.api import get_load_out, get_region, set_load_out
 from ValLib.structs import ExtraAuth
 from ValVault.terminal import User, get_auth
 
 from .storage import *
+from .structs import Action
 
 
-def action(action, user: User, cfg):
+def action(action: Action, user: User, cfg):
     auth = get_auth(user)
     region = get_region(auth)
     loadAuth = ExtraAuth(user.username, region, auth)
@@ -21,26 +25,26 @@ def action(action, user: User, cfg):
         backup(loadAuth)
 
 
-def write(data, file, sub):
+def write(data, file: Union[str, Path], sub: str):
     create_path(settingsPath / "loadouts" / sub)
     json_write(data, settingsPath / "loadouts" / sub / file)
 
 
-def read(file, sub):
+def read(file: Union[str, Path], sub: str):
     return json_read(settingsPath / "loadouts" / sub / file)
 
 
-def list(sub):
+def list(sub: str):
     return list_dir(settingsPath / "loadouts" / sub)
 
 
-def upload(cfg, loadAuth: ExtraAuth):
+def upload(cfg: str, loadAuth: ExtraAuth):
     data = read(cfg, loadAuth.username)
     req = set_load_out(loadAuth, data)
     print(f'Loadout status code: {req.status_code}')
 
 
-def download(cfg, loadAuth: ExtraAuth):
+def download(cfg: str, loadAuth: ExtraAuth):
     data = get_load_out(loadAuth)
     write(data, cfg, loadAuth.username)
 
