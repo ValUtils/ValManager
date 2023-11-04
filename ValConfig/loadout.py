@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Union
 
-from ValLib.api import get_load_out, get_region, set_load_out
+from ValLib.api import get_extra_auth, get_load_out, get_region, set_load_out
 from ValLib.structs import ExtraAuth
 from ValVault.terminal import User, get_auth
 
@@ -11,8 +11,7 @@ from .structs import Action
 
 def action(action: Action, user: User, cfg):
     auth = get_auth(user)
-    region = get_region(auth)
-    loadAuth = ExtraAuth(user.username, region, auth)
+    loadAuth = get_extra_auth(auth, user.username)
 
     if action == "dump":
         download(cfg, loadAuth)
