@@ -1,5 +1,5 @@
 [project]
-name="ValConfig"
+name="ValManager"
 version = "0.0.1"
 readme = "README.md"
 authors = [{ name = "PWall" }]
@@ -14,7 +14,7 @@ dependencies = [
 requires-python = ">=3.8"
 
 [project.urls]
-Homepage = "https://github.com/ValUtils/ValConfig"
+Homepage = "https://github.com/ValUtils/ValManager"
 
 [tool.bumpver]
 current_version = "0.0.1"
